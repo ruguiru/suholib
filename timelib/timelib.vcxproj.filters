@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Datetime">
+      <UniqueIdentifier>{72e59467-3b93-4019-8d42-2f4cbb6b7a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="idioms">
+      <UniqueIdentifier>{f26db94e-cc24-4fee-b584-fa73f9d2ac15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Datetime\Format">
+      <UniqueIdentifier>{8fc89b42-9bf7-44e0-8588-380a6827d68d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time">
+      <UniqueIdentifier>{22b51b52-2fd3-4f94-bed3-7ce291ac20d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{0b3cb64c-d42b-4260-8f6b-229ea113d4a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log">
+      <UniqueIdentifier>{9e7dc4f3-0276-46f3-8a67-8096b2069722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileIO">
+      <UniqueIdentifier>{acc24f0f-534c-47d3-8eff-f58f6cc3c8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pattern">
+      <UniqueIdentifier>{b914f869-0218-4124-ab64-e500ca3c8f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{e5b2e149-d9ed-475b-bf38-0966338c5031}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DateTime.cpp">
+      <Filter>Datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="StopWatch.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="TimePoint.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSpan.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Tokenizer.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="FileReader.cpp">
+      <Filter>FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="FileWriter.cpp">
+      <Filter>FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DateTime.h">
+      <Filter>Datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="DatetimeConfig.h">
+      <Filter>Datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="StringToType.h">
+      <Filter>idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="Noncopyable.h">
+      <Filter>idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="Int2Type.h">
+      <Filter>idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicFormat.h">
+      <Filter>Datetime\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomFormat.h">
+      <Filter>Datetime\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Format.h">
+      <Filter>Datetime\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="StopWatch.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="TimePoint.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSpan.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Tokenizer.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReader.h">
+      <Filter>FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="FileWriter.h">
+      <Filter>FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilFunctions.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="Counter.h">
+      <Filter>idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
