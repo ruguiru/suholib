@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{1078a7ec-f174-4b38-bab1-58cad52b893d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Datetime">
+      <UniqueIdentifier>{3570bd52-53d5-4164-991b-c639bf83192a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileIO">
+      <UniqueIdentifier>{79b46149-c655-40c9-93b2-857825b7a8b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Idioms">
+      <UniqueIdentifier>{43a254c4-bc44-4395-a308-9a7fb22c3396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pattern">
+      <UniqueIdentifier>{f53e28c8-1ae9-45e3-95ac-88dcd8951d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{cd56cebc-5444-4968-97dc-ac0a2a81bc14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time">
+      <UniqueIdentifier>{0206410e-f3c7-4da9-9879-71b74024e681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{58593010-0b7b-4b40-8e8d-2cc3305912ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Datetime\Format">
+      <UniqueIdentifier>{f8cc94d8-0495-47c9-8539-c93ee5c95369}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{e835120a-d28c-43d2-bd9c-55216cf58491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external_lib">
+      <UniqueIdentifier>{ab9e649a-4596-4eb7-9326-4b922944b324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external_lib\json">
+      <UniqueIdentifier>{fdb985dd-7d0d-45bf-9a39-5645a30922e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SmartPointer">
+      <UniqueIdentifier>{c0319374-28ad-4deb-9994-aa7da66d7d58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external_lib\atomic_sptr">
+      <UniqueIdentifier>{7721a3eb-7363-42e8-a985-6ec3e7b60867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log">
+      <UniqueIdentifier>{41f7c5e1-94d4-46f6-b2bb-543ca2477716}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Buffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BasicFormat.h">
+      <Filter>Datetime\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CustomFormat.h">
+      <Filter>Datetime\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Format.h">
+      <Filter>Datetime\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DateTime.h">
+      <Filter>Datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DatetimeConfig.h">
+      <Filter>Datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileReader.h">
+      <Filter>FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileWriter.h">
+      <Filter>FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Int2Type.h">
+      <Filter>Idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Noncopyable.h">
+      <Filter>Idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StringToType.h">
+      <Filter>Idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tokenizer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UtilFunctions.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StopWatch.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TimePoint.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Timer.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TimeSpan.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Prototype.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RingBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StreamBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EventSync.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Chrono.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json.hpp">
+      <Filter>external_lib\json</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Singleton.hpp">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ObjectPool.hpp">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Counter.hpp">
+      <Filter>Idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ThreadManager.hpp">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Random.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\atomic_shared_ptr.hpp">
+      <Filter>external_lib\atomic_sptr</Filter>
+    </ClInclude>
+    <ClInclude Include="include\atomic_weak_ptr.hpp">
+      <Filter>external_lib\atomic_sptr</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Log.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NonMovable.h">
+      <Filter>Idioms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LogHelper.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DateTime.cpp">
+      <Filter>Datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileReader.cpp">
+      <Filter>FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileWriter.cpp">
+      <Filter>FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tokenizer.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StopWatch.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimePoint.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimeSpan.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RingBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StreamBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Thread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventSync.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

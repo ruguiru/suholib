@@ -1,0 +1,38 @@
+{
+	"AcceptConnections":
+	{
+		"Client":
+		{
+			"Port":9000, "MaxAccepts":10000
+		},
+		
+		"AdminServer":
+		{
+		 	"Port":9001, "MaxAccepts":1
+		}
+	},
+
+	"ConnectConnections":
+	{
+		"TimeServer":
+		{
+			"RetryIntervalmsec":1000,
+			"Destinations":
+			[
+				{"ID":0, "Address":"10.10.0.1", "Port":10000},
+				{"ID":1, "Address":"10.10.0.2", "Port":10000}
+			]
+		},
+
+
+		"AuthServer":
+		{
+			"RetryIntervalmsec":1000,
+			"Destinations":
+			[
+				{"ID":0, "Address":"10.10.0.3", "Port":10001},
+				{"ID":1, "Address":"10.10.0.4", "Port":10002}
+			]
+		}
+	}
+}

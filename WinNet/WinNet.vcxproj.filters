@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{a4f2a579-8afd-46c2-92f2-e92827c75522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{aacc1075-d3ff-4616-bf56-8999564ed993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Iocp">
+      <UniqueIdentifier>{23a65996-2b89-4985-bb3b-67cfc8b26f8c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\WinNet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Socket.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TCPSocket.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UDPSocket.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SocketAddress.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IPAddress.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ActiveNetUnitManager.hpp">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AutoConnector.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ConnectionManager.hpp">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IocpServer.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ListenSocket.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NetUnit.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WorkerThread.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DNS.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OverlappedSocket.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ConnectSocket.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OverlappedPool.h">
+      <Filter>Iocp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\WinNet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Socket.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TCPSocket.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UDPSocket.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPAddress.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SocketAddress.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AutoConnector.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IocpServer.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ListenSocket.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NetUnit.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorkerThread.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OverlappedSocket.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConnectSocket.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OverlappedPool.cpp">
+      <Filter>Iocp</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
