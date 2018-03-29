@@ -75,7 +75,25 @@ void NetUnit::Disconnect()
 
     //NetLog(level::INFO, "[%d] Disconnected!", _index);		// TEST
 
-	_own_socket->Close();
+	if (_direction == DIR_ACCEPT_FROM)
+	{
+		_own_socket->ShutDown(SD_BOTH);
+
+		if (!TransmitFile(_own_socket->GetSocket(), NULL, 0, 0, NULL, NULL,
+			TF_DISCONNECT | TF_REUSE_SOCKET))
+		{
+			int errorcode = WSAGetLastError();
+			if (errorcode != ERROR_IO_PENDING)
+			{
+				NetLog(level::ERR, "TransmitFile() Not Pending Error code:%d", errorcode);
+			}
+		}
+
+	}
+	else
+	{
+		_own_socket->Close();	
+	}
 
     Cleanup();
     OnDisconnect();
