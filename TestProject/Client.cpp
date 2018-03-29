@@ -9,8 +9,8 @@ using namespace suho::winnet::iocp;
 void Client::OnInit()
 {
 	_recv_buffersize = 1024 * 2;
-	_recv_socket_buffersize = 1024 * 10;
-	_send_socket_buffersize = 1024 * 10;	
+	//_recv_socket_buffersize = 1024 * 10;		// TEST
+	//_send_socket_buffersize = 1024 * 10;		// TEST
 }
 
 void Client::OnConnect()

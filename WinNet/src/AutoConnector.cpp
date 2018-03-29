@@ -49,7 +49,10 @@ bool AutoConnector::ConnectUnit::CheckConnection()
 	if (_netunit->IsActive())
 	{
 		if (!_netunit->IsConnected())
-			_netunit->DisconnectRequest();
+		{
+			NetLog(level::INFO, "[%d] Active But NotConnect!", _netunit->GetIndex());
+			_netunit->Disconnect();
+		}
 
 		return true;
 	}

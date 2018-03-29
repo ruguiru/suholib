@@ -74,11 +74,9 @@ void NetUnit::Disconnect()
 	std::lock_guard<std::mutex> lock(_mutex);
 
     //NetLog(level::INFO, "[%d] Disconnected!", _index);		// TEST
-
+	_own_socket->ShutDown(SD_BOTH);
 	if (_direction == DIR_ACCEPT_FROM)
-	{
-		_own_socket->ShutDown(SD_BOTH);
-
+	{	
 		if (!TransmitFile(_own_socket->GetSocket(), NULL, 0, 0, NULL, NULL,
 			TF_DISCONNECT | TF_REUSE_SOCKET))
 		{
@@ -150,7 +148,7 @@ void NetUnit::Recieve()
 
 	if (!_own_socket->AsyncRecieve(_recv_buffer.GetWritePos(), _recv_buffer.GetWritableSize(), &_overlapped_recv))
 	{
-		DisconnectRequest();
+		Disconnect();
 	}
 }
 
@@ -164,7 +162,7 @@ int NetUnit::Send(void * buffer, int size)
     int sendbytes = _own_socket->AsyncSend(reinterpret_cast<char*>(buffer), size, over_send);
 	if (sendbytes == -1)
 	{
-		DisconnectRequest();
+		Disconnect();
 		return -1;
 	}
 

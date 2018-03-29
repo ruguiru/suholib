@@ -9,7 +9,7 @@ void OverlappedSocket::AsyncAccept(SOCKET listen_sock, char * buf, int bufsize, 
     bool is_create = Init();
 	if (!is_create)
 	{
-		NetLog(level::FATAL, "AsyncAccept() Init() Fail Reuse Case");
+		//NetLog(level::FATAL, "AsyncAccept() Init() Fail Reuse Case");
 	}
 
     WSABUF wsabuf;

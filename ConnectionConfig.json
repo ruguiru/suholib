@@ -3,7 +3,7 @@
 	{
 		"Client":
 		{
-			"Port":9000, "MaxAccepts":10
+			"Port":9000, "MaxAccepts":10000
 		},
 		
 		"AdminServer":
