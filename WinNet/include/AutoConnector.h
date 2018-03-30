@@ -36,8 +36,6 @@ namespace iocp
 			TimeSpan											_interval;
 			SocketAddress										_destination;
 			TimePoint											_timepoint;
-
-			std::mutex											_mutex;
 		};
 
 	public:

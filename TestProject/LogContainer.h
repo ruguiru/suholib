@@ -11,6 +11,3 @@ BUILD_LOGTYPE(TimeServerLog, "C:/Log", cycle::DAILY)
 
 BUILD_LOGTYPE(StatisticLog, "C:/Log", cycle::DAILY)
 #define StatisticLog StatisticLog::GetInstance()->Write
-
-BUILD_LOGTYPE(SystemLog, "C:/Log", cycle::DAILY)
-#define SystemLog SystemLog::GetInstance()->Write

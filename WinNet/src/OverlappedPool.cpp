@@ -19,4 +19,3 @@ void OverlappedPool::ReturnObj(OverlappedEx * over_ex)
     over_ex->Clear();
     _overlapped_pool.Return(over_ex);
 }
-

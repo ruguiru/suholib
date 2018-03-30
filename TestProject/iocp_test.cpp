@@ -22,8 +22,6 @@ using namespace suho::log;
 
 void Terminator()
 {
-	SystemLog(level::INFO, "atexit()");
-
     ClientManager::GetInstance()->Destroy();
 	Statistic::GetInstance()->Terminate();
 	Iocp->Terminate();

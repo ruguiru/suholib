@@ -42,14 +42,10 @@ namespace buffer
         int GetReadableSize() const { return _write_pos - _read_pos; }
         int GetWritableSize() const { return _buffer.GetCapacity() - _write_pos; }
 
-        std::mutex& GetMutex() { return _mutex; }
-
     private:
 		suho::buffer::Buffer            _buffer;
 		int								_read_pos = 0;
 		int								_write_pos = 0;
-
-        std::mutex				        _mutex;
     };
 }	// end namespace suho
 }	// end namespace buffer

@@ -20,5 +20,5 @@ extern "C" const struct WinsockInitializer winsockinit;
 
 __pragma(comment(linker, "/export:_winsockinit"))
 
-BUILD_LOGTYPE(NetLog, "C:/Log", cycle::HOURLY)
-#define NetLog NetLog::GetInstance()->Write
+BUILD_LOGTYPE(IocpLog, "C:/Log", cycle::HOURLY)
+#define IocpLog IocpLog::GetInstance()->Write

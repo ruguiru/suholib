@@ -4,8 +4,6 @@ using namespace suho::buffer;
 
 void RingBuffer::Clear()
 {
-    std::lock_guard<std::mutex> lock(_mutex);
-
     _buffer.Clear();
     _head = 0;
     _tail = 0;
@@ -14,16 +12,12 @@ void RingBuffer::Clear()
 
 void RingBuffer::Resize(int capacity)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
-
-    _buffer.ReSize(capacity);
+	_buffer.ReSize(capacity);
     Clear();
 }
 
 bool RingBuffer::Peek(char * buf, int size)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
-
     if (buf == nullptr) return false;
 
     if (size > _data_size)
@@ -55,8 +49,6 @@ bool RingBuffer::Read(char * buf, int size)
 {
     if (Peek(buf, size))
     {
-        std::lock_guard<std::mutex> lock(_mutex);
-
         _head = (_head + size) % _buffer.GetCapacity();
         _data_size -= size;
 
@@ -67,10 +59,8 @@ bool RingBuffer::Read(char * buf, int size)
 }
 
 bool RingBuffer::Write(const char * data, int size)
-{           
-    if (data == nullptr) return false;
-
-    std::lock_guard<std::mutex> lock(_mutex);
+{   
+    if (data == nullptr) return false;    
 
     if (size > GetWritableSize())
         return false;

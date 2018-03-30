@@ -9,7 +9,7 @@ void OverlappedSocket::AsyncAccept(SOCKET listen_sock, char * buf, int bufsize, 
     bool is_create = Init();
 	if (!is_create)
 	{
-		//NetLog(level::FATAL, "AsyncAccept() Init() Fail Reuse Case");
+		//IocpLog(level::FATAL, "AsyncAccept() Init() Fail Reuse Case");
 	}
 
     WSABUF wsabuf;
@@ -23,7 +23,7 @@ void OverlappedSocket::AsyncAccept(SOCKET listen_sock, char * buf, int bufsize, 
     {
         if (GetLastError() != WSA_IO_PENDING)
         {
-            NetLog(level::INFO, "Error AcceptEx()");
+            IocpLog(level::INFO, "Error AcceptEx()");
         }
     }
 }
@@ -46,7 +46,7 @@ bool OverlappedSocket::AsyncRecieve(char * buffer, int size, LPOVERLAPPED overla
 		int errorcode = WSAGetLastError();
         if (errorcode != ERROR_IO_PENDING)
         {
-            NetLog(level::ERR, "WSARecv() Not Pending Error code:%d", errorcode);
+            IocpLog(level::ERR, "WSARecv() Not Pending Error code:%d", errorcode);
             if (errorcode == WSAECONNRESET || errorcode == WSAENETRESET || errorcode == WSAENOTCONN || errorcode == WSAECONNABORTED)
             {
                 // 辆丰 贸府
@@ -76,7 +76,7 @@ int OverlappedSocket::AsyncSend(char * buffer, int size, LPOVERLAPPED overlapped
         int errorcode = WSAGetLastError();
         if (errorcode != ERROR_IO_PENDING)
         {
-            NetLog(level::ERR, "WSASend() Not Pending Error code:%d", errorcode);
+            IocpLog(level::ERR, "WSASend() Not Pending Error code:%d", errorcode);
             if (errorcode == WSAECONNRESET || errorcode == WSAENETRESET || errorcode == WSAENOTCONN || errorcode == WSAECONNABORTED)
             {
                 // 辆丰 贸府

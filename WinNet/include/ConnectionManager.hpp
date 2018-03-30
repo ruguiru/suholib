@@ -65,7 +65,7 @@ namespace iocp
 			jss::atomic_shared_ptr<NetUnit> netunit = std::make_shared<T>(index++);
 			netunit->Init(DIR_ACCEPT_FROM);
 			netunit->SetListenSocket(listen_sock);
-			netunit->Accept();
+			netunit->AcceptRequest();
 
 			_netunit_storage.push_back(std::move(netunit));
 		}		

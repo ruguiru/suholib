@@ -38,7 +38,7 @@ bool IocpServer::InitIocp(const std::string& config_rootpath, int worker_thread_
 
 void IocpServer::Start()
 {	
-    NetLog(level::INFO, "Start Server");    
+    IocpLog(level::INFO, "Start Server");    
 
 	OverlappedPool::GetInstance()->Create(ConnectionManager::GetInstance()->GetSize() * 2);
 
@@ -107,7 +107,7 @@ void IocpServer::StartWorkerThread()
 		_worker_thread_array[i].Start(_iocp);
     }
 
-    NetLog(level::INFO, "WorkerThreads Start count : %d", _worker_thread_count);
+    IocpLog(level::INFO, "WorkerThreads Start count : %d", _worker_thread_count);
 }
 
 void IocpServer::TerminateWorkerThread()

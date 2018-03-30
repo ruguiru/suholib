@@ -29,7 +29,7 @@ void WorkerThread::Run(void * param)
         {   
             DWORD errorcode = GetLastError();
 
-            //NetLog(level::INFO, "GQCS FALSE ErrorCode:%d Bytes:%d", errorcode, transferred_bytes);	// TEST
+            //IocpLog(level::INFO, "GQCS FALSE ErrorCode:%d Bytes:%d", errorcode, transferred_bytes);	// LOG
             if (transferred_bytes == 0 || errorcode == ERROR_NETNAME_DELETED)
             {
 				// 종료 처리
@@ -41,75 +41,59 @@ void WorkerThread::Run(void * param)
 				}
             }
 
-			if (overlapped != 0)           // operation 이 있는 경우
+			if (overlapped != 0)
 			{
 				OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
-				if (over_ex->operation == OP_SEND)
+				if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
 				{
 					OverlappedPool::GetInstance()->ReturnObj(over_ex);
 				}
 			}
 
-            continue;
+			continue;
         }
 
-        // return true 인 경우
-        if (overlapped != 0 )           // operation 이 있는 경우
+		//IocpLog(level::INFO, "GQCS TRUE Bytes:%d", transferred_bytes);	// LOG
+
+		if (overlapped == 0)
+			continue;
+
+		OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
+		
+        if (over_ex->operation == OP_ACCEPT)
         {
-            OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
-            if (over_ex->operation == OP_ACCEPT && transferred_bytes == 0)
-            {
-                NetUnit* new_connection = reinterpret_cast<NetUnit*>(over_ex->owner);
-                if (new_connection)
-                    new_connection->AcceptPost();
-            }
-            else if (over_ex->operation == OP_RECIEVE && transferred_bytes != 0)
-            {
-                if (completion_key == 0)
-                    continue;
-
-                NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
-                if (connection)
-                    connection->RecievePost(transferred_bytes);
-            }
-            else if(over_ex->operation == OP_SEND)
-            {
-				OverlappedPool::GetInstance()->ReturnObj(over_ex);
-
-				if (transferred_bytes != 0)
+            NetUnit* new_connection = reinterpret_cast<NetUnit*>(over_ex->owner);
+            if (new_connection)
+                new_connection->Accept(transferred_bytes);
+        }
+		else
+		{
+			if (completion_key != 0)
+			{
+				NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
+				if (connection)
 				{
-					if (completion_key == 0)
-						continue;
-
-					NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
-					if (connection)
-						connection->SendPost(transferred_bytes);
+					if (over_ex->operation == OP_RECIEVE && transferred_bytes != 0)
+					{
+						connection->Recieve(transferred_bytes);
+					}
+					else if (over_ex->operation == OP_SEND && transferred_bytes != 0)
+					{
+						connection->Send(transferred_bytes);
+					}
+					else if (over_ex->operation == OP_DISCONNECT)
+					{
+						connection->Disconnect();
+					}
+					else if (transferred_bytes == 0)
+					{
+						connection->Disconnect();
+					}
 				}
-            }
-            else if(transferred_bytes == 0)
-            {
-                // 종료 처리
-                if (completion_key == 0)
-                    continue;
+			}
+		}
 
-                NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
-                if (connection)
-					connection->Disconnect();
-            }
-        }
-        else
-        {
-            if (transferred_bytes == 0)
-            {
-                // 종료 처리
-                if (completion_key == 0)
-                    continue;
-
-                NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
-                if (connection)
-                    connection->Disconnect();
-            }
-        }
-     
+		if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
+			OverlappedPool::GetInstance()->ReturnObj(over_ex);
     }  
 }

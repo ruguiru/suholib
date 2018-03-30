@@ -59,8 +59,6 @@ StreamBuffer & StreamBuffer::operator=(StreamBuffer && other)
 
 void StreamBuffer::Clear()
 {
-	std::lock_guard<std::mutex> lock(_mutex);
-
 	_buffer.Clear();
 	_read_pos = 0;
 	_write_pos = 0;
@@ -68,16 +66,13 @@ void StreamBuffer::Clear()
 
 void StreamBuffer::Resize(int capacity)
 {
-	std::lock_guard<std::mutex> lock(_mutex);
-
 	_buffer.ReSize(capacity);
+
 	Clear();
 }
 
 bool StreamBuffer::Peek(char * buf, int size)
 {
-	std::lock_guard<std::mutex> lock(_mutex);
-
 	if (buf == nullptr) return false;
 
 	if (size > GetReadableSize())
@@ -92,8 +87,6 @@ bool StreamBuffer::Read(char * buf, int size)
 {
 	if (Peek(buf, size))
 	{
-		std::lock_guard<std::mutex> lock(_mutex);
-		
 		_read_pos += size;			
 
 		return true;
@@ -104,9 +97,7 @@ bool StreamBuffer::Read(char * buf, int size)
 
 bool StreamBuffer::Write(const char * data, int size)
 {
-	if (data == nullptr) return false;
-
-	std::lock_guard<std::mutex> lock(_mutex);
+	if (data == nullptr) return false;	
 
 	if (size > GetWritableSize())
 		return false;
@@ -136,13 +127,11 @@ void StreamBuffer::CarriageReturn()
 
 void StreamBuffer::ShiftReadPos(int offset)
 {
-	std::lock_guard<std::mutex> lock(_mutex);
 	_read_pos += offset;
 }
 
 void StreamBuffer::ShiftWritePos(int offset)
 {
-	std::lock_guard<std::mutex> lock(_mutex);
 	_write_pos += offset;
 	_buffer.AddSize(offset);
 }

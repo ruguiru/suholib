@@ -20,7 +20,8 @@ namespace iocp
     {
         OP_ACCEPT = 0,
         OP_RECIEVE,
-        OP_SEND,		
+        OP_SEND,
+		OP_DISCONNECT,
     };
 
 	enum Direction
@@ -46,21 +47,22 @@ namespace iocp
 		explicit NetUnit(int index);
 		virtual ~NetUnit();
         
-		void Init(Direction direction);		// 생성시 한번 실행
-		void Disconnect();					// 종료 처리
-        void DisconnectRequest();			// workerthread로 넘김
+		void Init(Direction direction);		// 생성시 한번 실행		
+		
+		// iocp에 요청
+        void AcceptRequest();					// AcceptEx
+        void RecieveRequest();					// WSARecv
+        int SendRequest(void* buffer, int size);// WSASend		
 
-		bool ConnectTo(const suho::winnet::SocketAddress& sockaddr); // blocking Connect
-		void ConnectPost();											 // connect() 성공시
+		void Accept(DWORD recvbytes);			// 통지 후 처리
+		void Recieve(DWORD recvbytes);
+		void Send(DWORD sendbytes);		
 
-        void Accept();						// AcceptEx
-        void Recieve();
-        int Send(void* buffer, int size);
-
-		void AcceptPost();					// AcceptEx() 성공시
-		void RecievePost(DWORD recvbytes);
-		void SendPost(DWORD sendbytes);		
+		void DisconnectRequest();				// postqueued 로 직접 넘김
+		void Disconnect();						// 즉시 종료 처리
 				
+		bool ConnectTo(const suho::winnet::SocketAddress& sockaddr); // blocking connect
+
 		bool IsConnected();		
         bool IsActive() const { return _is_active; }
         void SetListenSocket(const jss::atomic_shared_ptr<ListenSocket>& listen_sock) { _listen_socket = listen_sock; }		
@@ -88,19 +90,27 @@ namespace iocp
 		// 패킷 처리.  로직 대부분이 이 함수안에서 실행. packet 데이터는 복사해서 써야한다
 		virtual void PacketProcessing(const void* packet, DWORD packetsize) { UNREFERENCED(packet); UNREFERENCED(packetsize); }
 
-        void Reset();                                               // 연결시 초기화
+		void IoStart();                                             // 연결시 초기화
+
         void Cleanup();                                             // 연결종료시 초기화
+		void BindIocp();											// Iocp에 연결
+		bool ReuseSocket();											// 소켓 재사용
 
 	protected:
 		const int					                                _index = -1;		// mem pool 상에서 인덱스
 		int															_connect_id = -1;	// connect 시 json 파일에 있는 ID값
+
         std::atomic<bool>                                           _is_active = false;
+		std::atomic<bool>                                           _cas_disconnect = true;	// lockfree 용
+		std::atomic<bool>											_cas_send_error = true;
+
+		//bool														_is_active = false;
 
 		int                                                         _recv_buffersize = 1024;
 		int															_recv_socket_buffersize = 1024 * 4;
 		int															_send_socket_buffersize = 1024 * 8;
 
-		std::unique_ptr<suho::winnet::sock::OverlappedSocket>         _own_socket;
+		std::unique_ptr<suho::winnet::sock::OverlappedSocket>       _own_socket;
 
 	private:
 		suho::buffer::StreamBuffer									_accept_buffer;
@@ -115,11 +125,11 @@ namespace iocp
 
         OverlappedEx                                                _overlapped_accept = {};
         OverlappedEx                                                _overlapped_recv = {};
-        //OverlappedEx                                              _overlapped_send = {};
 
 		Direction													_direction;
 
-		std::mutex													_mutex;
+		//std::mutex												_mutex;
+		//std::recursive_mutex										_mutex;
 	};
 }
 }

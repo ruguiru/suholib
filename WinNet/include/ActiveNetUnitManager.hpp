@@ -28,7 +28,7 @@ namespace iocp
 
 		const ActiveUnit& Search(long key)
         {
-            std::lock_guard<std::mutex> lock(_mutex);
+            std::lock_guard<std::mutex> lock(_mutex);		// LOCK
 
             auto pos = _active_connections.find(key);
             if (pos == _active_connections.end())
@@ -39,29 +39,31 @@ namespace iocp
 
         void Insert(long key, const ActiveUnit& unit)
         {
-            std::lock_guard<std::mutex> lock(_mutex);
-
-            _active_connections.insert(std::make_pair(key, unit));
+			{
+				std::lock_guard<std::mutex> lock(_mutex);		// LOCK
+				_active_connections.insert(std::make_pair(key, unit));
+			}
 
 			OnInsert(key);
         }
 
         void Remove(long key)
         {
-            std::lock_guard<std::mutex> lock(_mutex);
-
-            _active_connections.erase(key);
+			{
+				std::lock_guard<std::mutex> lock(_mutex);		// LOCK
+				_active_connections.erase(key);
+			}
 
 			OnRemove(key);
         }
 
         virtual void BroadCast(void* buffer, int size)
         {
-            std::lock_guard<std::mutex> lock(_mutex);
+            std::lock_guard<std::mutex> lock(_mutex);		// LOCK
 
 			for (auto& elem : _active_connections)
 			{
-				elem.second->Send(buffer, size);
+				elem.second->SendRequest(buffer, size);
 			}
         }
 
@@ -70,8 +72,8 @@ namespace iocp
 		virtual void OnRemove(long key) = 0;
 
 	protected:		
-		std::unordered_map<long, ActiveUnit>			_active_connections;
-        std::mutex                                      _mutex;
+		std::unordered_map<long, ActiveUnit>				_active_connections;
+        std::mutex											_mutex;
 	};
 }
 }

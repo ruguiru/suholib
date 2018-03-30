@@ -8,9 +8,9 @@ using namespace suho::winnet::iocp;
 
 void Client::OnInit()
 {
-	_recv_buffersize = 1024 * 2;
-	//_recv_socket_buffersize = 1024 * 10;		// TEST
-	//_send_socket_buffersize = 1024 * 10;		// TEST
+	_recv_buffersize = 1024*4;
+	_recv_socket_buffersize = 1024 * 10;		// TEST
+	_send_socket_buffersize = 1024 * 20;		// TEST
 }
 
 void Client::OnConnect()
@@ -43,7 +43,7 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 {
 	MyPacket recvpacket(packet, packetsize);
 
-    //ClientLog(level::INFO, "[%d] RecvPacket:%d", _index, recvpacket.GetProtocolID());		// TEST
+    //ClientLog(level::INFO, "[%d] RecvPacket:%d", _index, recvpacket.GetProtocolID());		// LOG
 	Statistic::GetInstance()->AddRecvCount();
 
 	switch (recvpacket.GetProtocolID())	
@@ -63,8 +63,8 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 
 	case 2:
 	{
-		std::string s;
-		recvpacket >> s;
+		int a;
+		recvpacket >> a;
 
 		{
 			MyPacket sendPacket(2);
@@ -84,6 +84,6 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 int Client::SendPacket(MyPacket & packet)
 {
 	Statistic::GetInstance()->AddSendCount(1);
-    //ClientLog(level::INFO, "[%d] SendPacket:%d", _index, packet.GetProtocolID());		// TEST
-    return Send(packet.GetBuffer(), packet.GetPacketSize());
+    //ClientLog(level::INFO, "[%d] SendPacket:%d", _index, packet.GetProtocolID());		// LOG
+    return SendRequest(packet.GetBuffer(), packet.GetPacketSize());
 }

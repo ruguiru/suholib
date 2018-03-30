@@ -23,7 +23,7 @@ void AutoConnector::Run(void * param)
 {
 	UNREFERENCED(param)
 
-    NetLog(level::INFO, "Start AutoConnect");
+    IocpLog(level::INFO, "Start AutoConnect");
 
 	while (_is_started)
 	{
@@ -32,7 +32,7 @@ void AutoConnector::Run(void * param)
 			if (conn.CheckConnection())
 			{
 				continue;
-			}
+			}			
 
 			conn.TryConnect();
 		}
@@ -43,15 +43,13 @@ void AutoConnector::Run(void * param)
 }
 
 bool AutoConnector::ConnectUnit::CheckConnection()
-{
-	std::lock_guard<std::mutex> lock(_mutex);
-
+{	
 	if (_netunit->IsActive())
 	{
 		if (!_netunit->IsConnected())
 		{
-			NetLog(level::INFO, "[%d] Active But NotConnect!", _netunit->GetIndex());
-			_netunit->Disconnect();
+			IocpLog(level::INFO, "[%d] Active But NotConnect!", _netunit->GetIndex());
+			_netunit->DisconnectRequest();
 		}
 
 		return true;
@@ -67,14 +65,12 @@ void AutoConnector::ConnectUnit::TryConnect()
 
 	if (elased.ToMiliSeconds() >= _interval.ToMiliSeconds())
 	{
-		std::lock_guard<std::mutex> lock(_mutex);
-
 		_timepoint = tp_now;
 
 		if (!_netunit->ConnectTo(_destination))
 		{
-            NetLog(level::ERR, "connect() fail to [%s]", _destination.GetIP().ToString().c_str());
-			_netunit->Disconnect();
+            IocpLog(level::ERR, "connect() fail to [%s]", _destination.GetIP().ToString().c_str());
+			_netunit->DisconnectRequest();
 		}
 	}
 }

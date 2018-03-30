@@ -24,6 +24,6 @@ public:
 
 
 private:
-	long							_key;	
+	long							_key;
 };
 

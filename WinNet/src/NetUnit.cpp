@@ -18,9 +18,10 @@ NetUnit::NetUnit(int index):
 
 NetUnit::~NetUnit()
 {
+	IocpLog(level::FATAL, "[%d] NetUnit Destroy!!!!!!", _index);
+
 	_overlapped_accept.Clear();
 	_overlapped_recv.Clear();
-	//_overlapped_send.Clear();
 }
 
 void NetUnit::Init(Direction direction)
@@ -32,7 +33,7 @@ void NetUnit::Init(Direction direction)
 	else
 		_own_socket = std::make_unique<suho::winnet::sock::OverlappedSocket>();
 
-	_accept_buffer.Create(128);
+	_accept_buffer.Create(1024);
 	_recv_buffer.Create(_recv_buffersize);
 
     _overlapped_accept.operation = OP_ACCEPT;
@@ -41,139 +42,53 @@ void NetUnit::Init(Direction direction)
     _overlapped_recv.operation = OP_RECIEVE;
     _overlapped_recv.owner = this;
 
-    //_overlapped_send.operation = OP_SEND;
-    //_overlapped_send.owner = this;
-
     OnInit();
 }
 
-void NetUnit::Reset()
-{
-	_is_active = true;
-}
-
-void NetUnit::Cleanup()
-{
-	_is_active = false;
-
-	_accept_buffer.Clear();
-	_recv_buffer.Clear();
-
-	_local_address.Clear();
-	_remote_address.Clear();
-
-	_overlapped_accept.Reset();
-	_overlapped_recv.Reset();
-	//_overlapped_send.Reset();
-
-	_processing_size = 0;
-}
-
-void NetUnit::Disconnect()
-{
-	std::lock_guard<std::mutex> lock(_mutex);
-
-    //NetLog(level::INFO, "[%d] Disconnected!", _index);		// TEST
-	_own_socket->ShutDown(SD_BOTH);
-	if (_direction == DIR_ACCEPT_FROM)
-	{	
-		if (!TransmitFile(_own_socket->GetSocket(), NULL, 0, 0, NULL, NULL,
-			TF_DISCONNECT | TF_REUSE_SOCKET))
-		{
-			int errorcode = WSAGetLastError();
-			if (errorcode != ERROR_IO_PENDING)
-			{
-				NetLog(level::ERR, "TransmitFile() Not Pending Error code:%d", errorcode);
-			}
-		}
-
-	}
-	else
-	{
-		_own_socket->Close();	
-	}
-
-    Cleanup();
-    OnDisconnect();
-
-	if(_direction == DIR_ACCEPT_FROM )
-		Accept();
-}
-
-void NetUnit::DisconnectRequest()
-{
-	std::lock_guard<std::mutex> lock(_mutex);
-
-    //NetLog(level::INFO, "[%d] Request Disconnect", _index);		// TEST
-
-	_own_socket->ShutDown(SD_BOTH);
-
-    PostQueuedCompletionStatus(Iocp->GetIocpHandle(), 0, reinterpret_cast<ULONG_PTR>(this), NULL);
-}
-
-bool NetUnit::ConnectTo(const suho::winnet::SocketAddress & sockaddr)
-{
-	bool success = _own_socket->Connect(sockaddr);
-	if (success)
-		ConnectPost();
-
-	return success;
-}
-
-void NetUnit::ConnectPost()
-{
-	Reset();
-
-	Iocp->Associate(reinterpret_cast<HANDLE>(_own_socket->GetSocket()), reinterpret_cast<ULONG_PTR>(this));
-
-	OnConnect();
-
-	Recieve();
-}
-
-void NetUnit::Accept()
+void NetUnit::AcceptRequest()
 {
 	if (!_listen_socket->IsValidSocket())
 	{
-		NetLog(level::ERR, "Accept() listensocket is not allocate");
+		IocpLog(level::ERR, "Accept() listensocket is not allocate");
 		return;
 	}
 
     _own_socket->AsyncAccept(_listen_socket->GetSocket(), _accept_buffer.GetWritePos(), _accept_buffer.GetWritableSize(), &_overlapped_accept);
 }
 
-void NetUnit::Recieve()
+void NetUnit::RecieveRequest()
 {
-    _overlapped_recv.Reset();      
+    _overlapped_recv.Reset();
 
 	if (!_own_socket->AsyncRecieve(_recv_buffer.GetWritePos(), _recv_buffer.GetWritableSize(), &_overlapped_recv))
 	{
-		Disconnect();
+		DisconnectRequest();
 	}
 }
 
-int NetUnit::Send(void * buffer, int size)
+int NetUnit::SendRequest(void * buffer, int size)
 {
-	//std::lock_guard<std::mutex> lock(_mutex);
+	//std::lock_guard<std::mutex> lock(_mutex);		// LOCK
+	//std::lock_guard<std::recursive_mutex> lock(_mutex);		// LOCK
 
-    //_overlapped_send.Reset();
 	OverlappedEx* over_send = OverlappedPool::GetInstance()->GetOverlapped(OP_SEND, this);
 
     int sendbytes = _own_socket->AsyncSend(reinterpret_cast<char*>(buffer), size, over_send);
 	if (sendbytes == -1)
 	{
-		Disconnect();
+		DisconnectRequest();
 		return -1;
 	}
 
 	return sendbytes;
 }
 
-void NetUnit::AcceptPost()
+void NetUnit::Accept(DWORD recvbytes)
 {
-	//std::lock_guard<std::mutex> lock(_mutex);
+	//std::lock_guard<std::mutex> lock(_mutex);					// LOCK
+	//std::lock_guard<std::recursive_mutex> lock(_mutex);		// LOCK
 
-    //NetLog(level::INFO, "[%d] AcceptPost!", _index);		// TEST
+    //IocpLog(level::INFO, "[%d] AcceptPost!", _index);			// LOG
 
 	INT localaddr_len = 0;
 	INT remoteaddr_len = 0;
@@ -187,7 +102,7 @@ void NetUnit::AcceptPost()
 
 	if (remoteaddr_len == 0)
 	{
-		NetLog(level::ERR, "GetAcceptExSockaddrs Fail");
+		IocpLog(level::ERR, "GetAcceptExSockaddrs Fail");
 	}
 	else
 	{
@@ -197,20 +112,13 @@ void NetUnit::AcceptPost()
 
 	_own_socket->SetUpdateAcceptContext(_listen_socket->GetSocket());
 
-	Iocp->Associate(reinterpret_cast<HANDLE>(_own_socket->GetSocket()), reinterpret_cast<ULONG_PTR>(this));
-
-	Reset();
-
-	OnConnect();
-
-	Recieve();
+	IoStart();
 }
 
-void NetUnit::RecievePost(DWORD recvbytes)
+void NetUnit::Recieve(DWORD recvbytes)
 {
-	//std::lock_guard<std::mutex> lock(_mutex);
-
-    //NetLog(level::INFO, "[%d] RecvPost %d bytes recieve", _index, recvbytes);	// TEST
+	//std::lock_guard<std::mutex> lock(_mutex);		// LOCK
+	//std::lock_guard<std::recursive_mutex> lock(_mutex);		// LOCK
     
 	_recv_buffer.ShiftWritePos(recvbytes);
 	_processing_size += recvbytes;
@@ -218,13 +126,11 @@ void NetUnit::RecievePost(DWORD recvbytes)
 	while (_processing_size > 0)
 	{
 		DWORD packetsize = HeaderParsing(_recv_buffer.GetReadPos(), _processing_size);
+		//IocpLog(level::INFO, "[%d] HeaderParsing GetPacketSize:%d bytes", _index, packetsize);	// LOG
 		if (packetsize == 0)
 			break;
 				
 		PacketProcessing(_recv_buffer.GetReadPos(), packetsize);
-		
-		if (!_is_active)	// 패킷처리 수행중 연결끊어졌을 경우
-			return;
 
 		// read_pos 를 패킷크기단위로 이동시키므로 HeaderParsing에서는 항상 패킷 시작점을 가리킴
 		_recv_buffer.ShiftReadPos(packetsize);
@@ -233,22 +139,125 @@ void NetUnit::RecievePost(DWORD recvbytes)
 
 	_recv_buffer.CarriageReturn();
 
-    Recieve();
+    RecieveRequest();
 }
 
-void NetUnit::SendPost(DWORD sendbytes)
+void NetUnit::Send(DWORD sendbytes)
 {
-    //NetLog(level::INFO, "[%d] SendPost %d bytes send", _index, sendbytes);	// TEST
+    //IocpLog(level::INFO, "[%d] SendP %d bytes sent", _index, sendbytes);	// LOG
 }
+
+void NetUnit::DisconnectRequest()
+{
+	//std::lock_guard<std::mutex> lock(_mutex);
+	//std::lock_guard<std::recursive_mutex> lock(_mutex);		// LOCK
+
+	//IocpLog(level::INFO, "[%d] Request Disconnect", _index);		// LOG
+	bool flag = true;
+	if (_cas_disconnect.compare_exchange_strong(flag, false))
+	{
+		OverlappedEx* over_disconnect = OverlappedPool::GetInstance()->GetOverlapped(OP_DISCONNECT, this);
+
+		PostQueuedCompletionStatus(Iocp->GetIocpHandle(), 0, reinterpret_cast<ULONG_PTR>(this), over_disconnect);
+	}
+}
+
+void NetUnit::Disconnect()
+{
+	//std::lock_guard<std::mutex> lock(_mutex);					// LOCK
+	//std::lock_guard<std::recursive_mutex> lock(_mutex);		// LOCK
+
+	//IocpLog(level::INFO, "[%d] Disconnected!", _index);		// LOG
+
+	_cas_disconnect = true;
+
+	bool flag = true;
+	if (_is_active.compare_exchange_strong(flag, false))
+	{
+		OnDisconnect();
+
+		_own_socket->ShutDown(SD_BOTH);
+
+		if (_direction == DIR_ACCEPT_FROM)
+			ReuseSocket();
+		else
+			_own_socket->Close();
+
+		Cleanup();
+
+		if (_direction == DIR_ACCEPT_FROM)
+			AcceptRequest();
+	}
+}
+
+bool NetUnit::ConnectTo(const suho::winnet::SocketAddress & sockaddr)
+{
+	bool success = _own_socket->Connect(sockaddr);
+	if (success)
+	{
+		IoStart();
+	}
+
+	return success;
+}
+
+
+void NetUnit::IoStart()
+{
+	_is_active = true;
+
+	BindIocp();	
+	
+	OnConnect();	
+
+	RecieveRequest();
+}
+
+void NetUnit::Cleanup()
+{
+	//_is_active = false;
+	//_cas_disconnect = true;
+
+	_connect_id = -1;
+
+	_accept_buffer.Clear();
+	_recv_buffer.Clear();
+
+	_local_address.Clear();
+	_remote_address.Clear();
+
+	_overlapped_accept.Reset();
+	_overlapped_recv.Reset();
+
+	_processing_size = 0;
+}
+
+void NetUnit::BindIocp()
+{
+	Iocp->Associate(reinterpret_cast<HANDLE>(_own_socket->GetSocket()), reinterpret_cast<ULONG_PTR>(this));
+}
+
+bool NetUnit::ReuseSocket()
+{
+	if (!TransmitFile(_own_socket->GetSocket(), NULL, 0, 0, NULL, NULL,
+		TF_DISCONNECT | TF_REUSE_SOCKET))
+	{
+		int errorcode = WSAGetLastError();
+		if (errorcode != ERROR_IO_PENDING)
+		{
+			IocpLog(level::ERR, "TransmitFile() Not Pending Error code:%d", errorcode);
+			return false;
+		}
+	}
+
+	return true;
+}
+
 
 bool NetUnit::IsConnected()
 {
-	std::lock_guard<std::mutex> lock(_mutex);
+	//std::lock_guard<std::mutex> lock(_mutex);					// LOG
+	//std::lock_guard<std::recursive_mutex> lock(_mutex);		// LOCK
 
-	bool is_connect = _own_socket->IsConnected();
-
-	if (is_connect == false)
-		_is_active = false;
-
-	return is_connect;
+	return _own_socket->IsConnected();
 }
