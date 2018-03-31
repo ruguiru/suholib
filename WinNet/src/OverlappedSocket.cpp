@@ -47,7 +47,7 @@ bool OverlappedSocket::AsyncRecieve(char * buffer, int size, LPOVERLAPPED overla
 		int errorcode = WSAGetLastError();
         if (errorcode != ERROR_IO_PENDING)
         {
-            IocpLog(level::ERR, "WSARecv() Not Pending Error code:%d", errorcode);		// LOG
+            //IocpLog(level::ERR, "WSARecv() Not Pending Error code:%d", errorcode);		// LOG
             if (errorcode == WSAECONNRESET || errorcode == WSAENETRESET || errorcode == WSAENOTCONN || errorcode == WSAECONNABORTED)
             {
                 // 辆丰 贸府
@@ -82,7 +82,7 @@ int OverlappedSocket::AsyncSend(char * buffer, int size, LPOVERLAPPED overlapped
         int errorcode = WSAGetLastError();
         if (errorcode != ERROR_IO_PENDING)
         {
-            IocpLog(level::ERR, "WSASend() Not Pending Error code:%d", errorcode);		// LOG
+            //IocpLog(level::ERR, "WSASend() Not Pending Error code:%d", errorcode);		// LOG
             if (errorcode == WSAECONNRESET || errorcode == WSAENETRESET || errorcode == WSAENOTCONN || errorcode == WSAECONNABORTED)
             {
                 // 辆丰 贸府

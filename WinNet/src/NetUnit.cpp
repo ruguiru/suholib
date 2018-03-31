@@ -88,6 +88,7 @@ int NetUnit::SendRequest(void * buffer, int size)
     int sendbytes = _own_socket->AsyncSend(reinterpret_cast<char*>(buffer), size, over_send);
 	if (sendbytes == -1)
 	{
+		OverlappedPool::GetInstance()->ReturnObj(over_send);
 		DisconnectRequest();
 		return -1;
 	}

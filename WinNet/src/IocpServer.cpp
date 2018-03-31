@@ -40,7 +40,7 @@ void IocpServer::Start()
 {	
     IocpLog(level::INFO, "Start Server");    
 
-	OverlappedPool::GetInstance()->Create(ConnectionManager::GetInstance()->GetSize() * 2);
+	OverlappedPool::GetInstance()->Create(ConnectionManager::GetInstance()->GetSize() * 10);
 
     StartWorkerThread();
 

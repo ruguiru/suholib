@@ -234,7 +234,7 @@ DWORD BasicSocket::LastError(const std::string & comment)
 		MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), (LPTSTR)&lpMsgBuf, 0, NULL);
 
 	char error_msg[1024] = {};
-	sprintf_s(error_msg, "[%s] CODE:%d MSG:%s", comment.c_str(), error_code, lpMsgBuf);
+	sprintf_s(error_msg, "[%s] CODE:%d MSG:%s", comment.c_str(), error_code, reinterpret_cast<char*>(lpMsgBuf));
 
 #ifdef _DEBUG
 	printf(error_msg);

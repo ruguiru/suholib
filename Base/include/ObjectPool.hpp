@@ -62,7 +62,7 @@ namespace pool
 		std::vector<ObjType*>	_array_ptrs;			// Create 로 생성한 각 배열의 시작포인터(delete[] 용)
 
 		int						_expandsize;			// 메모리 부족시 확장 시킬 오브젝트 수
-		std::mutex				_mutex;
+		std::recursive_mutex	_mutex;
 		std::atomic<int>		_index = 0;
 	};
 
@@ -97,7 +97,7 @@ namespace pool
 	template<typename T, bool INDEXING>
 	inline T* ObjectPool<T, INDEXING>::Borrow()
 	{
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::recursive_mutex> lock(_mutex);
 
 		// 메모리 고갈시 expandsize 만큼 추가
 		if (_pool.empty())
@@ -114,7 +114,7 @@ namespace pool
 	template<typename T, bool INDEXING>
 	inline void ObjectPool<T, INDEXING>::Return(T * obj)
 	{
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::recursive_mutex> lock(_mutex);
 
 		_pool.push(static_cast<ObjType*>(obj));
 	}
@@ -131,7 +131,7 @@ namespace pool
 	template<typename T, bool INDEXING>
 	inline void ObjectPool<T, INDEXING>::Create(int size)
 	{
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::recursive_mutex> lock(_mutex);
 
 		ObjType* startptr = new ObjType[size];					// 배열로 생성 (지역성의 원리)
 		_array_ptrs.push_back(startptr);
@@ -147,7 +147,7 @@ namespace pool
 			_pool.push(startptr + i);
 		}
 
-		_expandsize = _pool.size() / 2;
+		_expandsize = _pool.size() * 2;
 	}
 
 	template<typename T, bool INDEXING>

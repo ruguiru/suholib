@@ -29,6 +29,15 @@ void WorkerThread::Run(void * param)
         {   
             DWORD errorcode = GetLastError();
 
+			if (overlapped != 0)
+			{
+				OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
+				if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
+				{
+					OverlappedPool::GetInstance()->ReturnObj(over_ex);
+				}
+			}
+
             if (transferred_bytes == 0 || errorcode == ERROR_NETNAME_DELETED)
             {
 				// 종료 처리
@@ -40,23 +49,13 @@ void WorkerThread::Run(void * param)
 				}
             }
 
-			if (overlapped != 0)
-			{
-				OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
-				if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
-				{
-					OverlappedPool::GetInstance()->ReturnObj(over_ex);
-				}
-			}
-
 			continue;
         }
 
 		if (overlapped == 0)
 			continue;
 
-		OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
-		
+		OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);		
         if (over_ex->operation == OP_ACCEPT)
         {
             NetUnit* new_connection = reinterpret_cast<NetUnit*>(over_ex->owner);
@@ -65,20 +64,24 @@ void WorkerThread::Run(void * param)
         }
 		else
 		{
+			OperatonType optype = over_ex->operation;
+			if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
+				OverlappedPool::GetInstance()->ReturnObj(over_ex);
+
 			if (completion_key != 0)
 			{
 				NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
 				if (connection)
 				{
-					if (over_ex->operation == OP_RECIEVE && transferred_bytes != 0)
+					if (optype == OP_RECIEVE && transferred_bytes != 0)
 					{
 						connection->Recieve(transferred_bytes);
 					}
-					else if (over_ex->operation == OP_SEND && transferred_bytes != 0)
+					else if (optype == OP_SEND && transferred_bytes != 0)
 					{
 						connection->Send(transferred_bytes);
 					}
-					else if (over_ex->operation == OP_DISCONNECT)
+					else if (optype == OP_DISCONNECT)
 					{
 						connection->Disconnect();
 					}
@@ -89,8 +92,5 @@ void WorkerThread::Run(void * param)
 				}
 			}
 		}
-
-		if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
-			OverlappedPool::GetInstance()->ReturnObj(over_ex);
     }  
 }
