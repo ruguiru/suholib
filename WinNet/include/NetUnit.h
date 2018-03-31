@@ -94,17 +94,12 @@ namespace iocp
 
         void Cleanup();                                             // 연결종료시 초기화
 		void BindIocp();											// Iocp에 연결
-		bool ReuseSocket();											// 소켓 재사용
 
 	protected:
 		const int					                                _index = -1;		// mem pool 상에서 인덱스
 		int															_connect_id = -1;	// connect 시 json 파일에 있는 ID값
 
         std::atomic<bool>                                           _is_active = false;
-		std::atomic<bool>                                           _cas_disconnect = true;	// lockfree 용
-		std::atomic<bool>											_cas_send_error = true;
-
-		//bool														_is_active = false;
 
 		int                                                         _recv_buffersize = 1024;
 		int															_recv_socket_buffersize = 1024 * 4;
@@ -128,8 +123,7 @@ namespace iocp
 
 		Direction													_direction;
 
-		//std::mutex												_mutex;
-		//std::recursive_mutex										_mutex;
+		std::mutex													_mutex;
 	};
 }
 }

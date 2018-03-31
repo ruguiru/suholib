@@ -30,9 +30,18 @@ namespace sock
 
         bool Create();
         void Close();
-        
+
+		// Transmit 으로 Reuse 하는 경우 사용
+		bool Reuse();
+		void Enable() { _is_enable = true; }
+		void Disable() { _is_enable = false; }
+		
         void SetUpdateAcceptContext(SOCKET listen_socket);
 
+	private:
+		// Transmit 으로 Reuse 하는 경우 사용
+		// Reuse의 경우 소켓을 닫지 않으므로 INVALID_SOCKET 의 검사를 할 수 없어 별도의 변수 필요
+		atomic<bool>					_is_enable = true;
     };
 }
 }

@@ -11,8 +11,8 @@ StreamBuffer::StreamBuffer(int capacity)
 	_buffer.Create(capacity);
 }
 
-StreamBuffer::StreamBuffer(const StreamBuffer & other)
-	:_read_pos(other._read_pos), _write_pos(other._write_pos)
+StreamBuffer::StreamBuffer(const StreamBuffer & other) :
+	_read_pos(other._read_pos), _write_pos(other._write_pos)
 {
 	_buffer.Create(other.GetCapacity());
 	memcpy(_buffer.Begin(), other._buffer.Begin(), other.GetSize());
@@ -36,7 +36,7 @@ StreamBuffer & StreamBuffer::operator=(const StreamBuffer & other)
     {
         _buffer = other._buffer;
         _read_pos = other._read_pos;
-        _write_pos = other._write_pos;        
+        _write_pos = other._write_pos;		
     }
 
     return *this;
@@ -118,7 +118,9 @@ void StreamBuffer::CarriageReturn()
 		memmove_s(_buffer.Begin(), _buffer.GetCapacity(), _buffer.Begin() + _read_pos, move_size);
 	}
 	else if (move_size < 0)		// exception!
-		return;
+	{
+		move_size = 0;
+	}		
 	
 	_read_pos = 0;
 	_write_pos = move_size;

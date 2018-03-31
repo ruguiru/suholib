@@ -14,6 +14,8 @@ Statistic::~Statistic()
 
 void Statistic::Run(void * param)
 {
+	UNREFERENCED(param)
+
 	while (_is_started)
 	{
 		Calculate();		
@@ -24,8 +26,6 @@ void Statistic::Run(void * param)
 
 void Statistic::Calculate()
 {
-	std::lock_guard<std::mutex> lock(_mutex);
-
 	int cu = ClientManager::GetInstance()->GetCount();
 
 	double avg_recv_per_sec = static_cast<double>(_recv_packet_count) / static_cast<double>(sec);

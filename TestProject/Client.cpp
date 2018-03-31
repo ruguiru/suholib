@@ -50,12 +50,15 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 	{
 	case 1:
 	{
-		std::string s;
-		recvpacket >> s;
+		std::string data;
+		int endsign = 0;
+		recvpacket >> data >> endsign;
 
+		//if (_index == 9999)		// TEST
+		//	printf("[%d] Recv : %d\n", _index, endsign);
 		{
 			MyPacket sendPacket(1);
-			sendPacket << "abcd" << 1213;
+			sendPacket << "abcdefgh";
 			SendPacket(sendPacket);
 		}
 		break;
@@ -63,15 +66,15 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 
 	case 2:
 	{
-		int a;
-		recvpacket >> a;
+		std::string data;
+		int endsign = 0;
+		recvpacket >> data >> endsign;
 
+		//if (_index == 9999)		// TEST
+		//	printf("[%d] Recv  : %d\n", _index, endsign);
 		{
-			MyPacket sendPacket(2);
-			sendPacket << "abcd" << 1213;
-			//SendPacket(sendPacket);
-			//SendPacket(sendPacket);
-			ClientManager::GetInstance()->BroadCast(sendPacket);
+			MyPacket sendPacket(recvpacket.GetBuffer(), recvpacket.GetPacketSize());
+			ClientManager::GetInstance()->BroadCast(recvpacket);
 		}
 		break;
 	}

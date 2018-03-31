@@ -29,7 +29,6 @@ void WorkerThread::Run(void * param)
         {   
             DWORD errorcode = GetLastError();
 
-            //IocpLog(level::INFO, "GQCS FALSE ErrorCode:%d Bytes:%d", errorcode, transferred_bytes);	// LOG
             if (transferred_bytes == 0 || errorcode == ERROR_NETNAME_DELETED)
             {
 				// 종료 처리
@@ -37,7 +36,7 @@ void WorkerThread::Run(void * param)
 				{
 					NetUnit* connection = reinterpret_cast<NetUnit*>(completion_key);
 					if (connection)
-						connection->Disconnect();
+						connection->DisconnectRequest();
 				}
             }
 
@@ -52,8 +51,6 @@ void WorkerThread::Run(void * param)
 
 			continue;
         }
-
-		//IocpLog(level::INFO, "GQCS TRUE Bytes:%d", transferred_bytes);	// LOG
 
 		if (overlapped == 0)
 			continue;

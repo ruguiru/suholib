@@ -58,6 +58,7 @@ namespace log
 		std::string ConvertStringFromLoglevel(level::LogLevel loglevel);
 
     private:
+		FileWriter										_fw;
 		std::string										_path;
 		cycle::FileCreateCycle							_filecycle;
 
@@ -75,22 +76,21 @@ namespace log
 		std::string message(buf.get(), buf.get() + size - 1);
 
 		DateTime dt;
-		dt.SetNow();
+		dt.SetNow();		
 
 		std::string date = dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).substr(0, 10);
-		std::string time = dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).substr(11, 8);
+		std::string time = dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).substr(11, 8);		
 
 		if (_filecycle == cycle::DAILY)
 		{
 			std::string filename(date);
 			filename += ".log";
 
-			FileWriter fw(filename, _path, std::ios::app);
-            fw << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n" << close;
-
-//#ifdef _DEBUG
+			_fw.Open(filename, _path, std::ios::app);            
+			_fw << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n" << close;
+#ifdef _DEBUG
 			cout << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n";
-//#endif
+#endif
 		}
 		else if (_filecycle == cycle::HOURLY)
 		{
@@ -103,11 +103,11 @@ namespace log
 			appended_path += "\\";
 			appended_path += date;
 
-			FileWriter fw(filename, appended_path, std::ios::app);
-            fw << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n" << close;
-//#ifdef _DEBUG
+			_fw.Open(filename, appended_path, std::ios::app);			
+			_fw << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n" << close;
+#ifdef _DEBUG
 			cout << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n";
-//#endif
+#endif
 		}
 	}
 

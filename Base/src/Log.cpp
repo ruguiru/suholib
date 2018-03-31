@@ -41,6 +41,7 @@ void Logger::Create(const std::string & division, const std::string & path)
     wfullpath += L"\\";
     wfullpath.append(division.begin(), division.end());
     SHCreateDirectoryEx(NULL, wfullpath.c_str(), NULL);
+
 #else
     std::string fullpath(path);
     fullpath += "\\";

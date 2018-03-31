@@ -6,12 +6,8 @@ using namespace suho::log;
 
 void OverlappedSocket::AsyncAccept(SOCKET listen_sock, char * buf, int bufsize, LPOVERLAPPED overlapped)
 {
-    bool is_create = Init();
-	if (!is_create)
-	{
-		//IocpLog(level::FATAL, "AsyncAccept() Init() Fail Reuse Case");
-	}
-
+    Init();
+	
     WSABUF wsabuf;
     wsabuf.buf = buf;
     wsabuf.len = bufsize;
@@ -33,6 +29,11 @@ bool OverlappedSocket::AsyncRecieve(char * buffer, int size, LPOVERLAPPED overla
     if (_socket == INVALID_SOCKET)
         return false;
 
+	if (!atomic_load(&_is_enable))
+	{
+		return false;
+	}
+
     DWORD recvbytes = 0;
     DWORD flags = 0;
 
@@ -46,7 +47,7 @@ bool OverlappedSocket::AsyncRecieve(char * buffer, int size, LPOVERLAPPED overla
 		int errorcode = WSAGetLastError();
         if (errorcode != ERROR_IO_PENDING)
         {
-            IocpLog(level::ERR, "WSARecv() Not Pending Error code:%d", errorcode);
+            IocpLog(level::ERR, "WSARecv() Not Pending Error code:%d", errorcode);		// LOG
             if (errorcode == WSAECONNRESET || errorcode == WSAENETRESET || errorcode == WSAENOTCONN || errorcode == WSAECONNABORTED)
             {
                 // 辆丰 贸府
@@ -63,6 +64,11 @@ int OverlappedSocket::AsyncSend(char * buffer, int size, LPOVERLAPPED overlapped
     if (_socket == INVALID_SOCKET)
         return -1;
 
+	if (!atomic_load(&_is_enable))
+	{
+		return -1;
+	}
+
     DWORD sendbytes = 0;
     DWORD flags = 0;
 
@@ -76,7 +82,7 @@ int OverlappedSocket::AsyncSend(char * buffer, int size, LPOVERLAPPED overlapped
         int errorcode = WSAGetLastError();
         if (errorcode != ERROR_IO_PENDING)
         {
-            IocpLog(level::ERR, "WSASend() Not Pending Error code:%d", errorcode);
+            IocpLog(level::ERR, "WSASend() Not Pending Error code:%d", errorcode);		// LOG
             if (errorcode == WSAECONNRESET || errorcode == WSAENETRESET || errorcode == WSAENOTCONN || errorcode == WSAECONNABORTED)
             {
                 // 辆丰 贸府
@@ -107,6 +113,22 @@ bool OverlappedSocket::Create()
 void OverlappedSocket::Close()
 {
 	BasicSocket::Close();
+}
+
+bool OverlappedSocket::Reuse()
+{
+	if (!TransmitFile(GetSocket(), NULL, 0, 0, NULL, NULL,
+		TF_DISCONNECT | TF_REUSE_SOCKET))
+	{
+		int errorcode = WSAGetLastError();
+		if (errorcode != ERROR_IO_PENDING)
+		{
+			IocpLog(level::ERR, "TransmitFile() Not Pending Error code:%d", errorcode);
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void OverlappedSocket::SetUpdateAcceptContext(SOCKET listen_socket)

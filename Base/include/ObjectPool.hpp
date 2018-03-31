@@ -188,7 +188,7 @@ namespace pool
         std::queue<T*>	        _pool;
         std::vector<T*>	        _array_ptrs;
 
-        std::mutex				_mutex;
+		std::mutex				_mutex;
     };
 
     template<typename T, bool ArrayAlloc>

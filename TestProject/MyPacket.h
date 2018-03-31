@@ -33,39 +33,17 @@ public:
 
 	~MyPacket() override {}
 
+	void Set(const void* data, int size);
 	void Reset() { Init(); }
 	void SetProtocol(int protocol_id) {	*_protocol_id = protocol_id; }	
 
-	void Set(const void* data, int size)
-	{		
-		Init();
-		_stream_buffer.ShiftWritePos(-_headersize);
-		AbstractPacket::Write(data, size);
-	}
-
-	bool Write(const void* data, int size) override
-	{		
-		bool success = AbstractPacket::Write(data, size);
-		if( success )
-			*_datasize += size;
-
-		return success;
-	}
+	bool Write(const void* data, int size) override;
 
 	const int GetProtocolID() const { return *_protocol_id; }
 	static const unsigned int GetHeaderSize() { return HEADER_SIZE; }
 
 private:
-	void Init()
-	{
-		_stream_buffer.Clear();
-
-		_stream_buffer.ShiftWritePos(_headersize);
-		_stream_buffer.ShiftReadPos(_headersize);
-
-		_datasize = reinterpret_cast<int*>(_stream_buffer.Begin());
-		_protocol_id = reinterpret_cast<int*>(_stream_buffer.Begin() + sizeof(int));
-	}
+	void Init();
 
 private:
 	int*									_datasize = nullptr;

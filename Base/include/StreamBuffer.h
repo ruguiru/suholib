@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mutex>
-
 #include "Buffer.h"
 
 namespace suho {
