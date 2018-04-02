@@ -35,6 +35,7 @@ int main()
 {
 	atexit(Terminator);
 
+	// rootpath와 workerthread couunt 설정. 0이면 코어개수*2
     Iocp->InitIocp("../", 0);           // create workerthread
 
 	Iocp->InitAccepts<Client>();        // listen(), acceptex()
