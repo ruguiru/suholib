@@ -19,8 +19,7 @@
 			"RetryIntervalmsec":1000,
 			"Destinations":
 			[
-				{"ID":0, "Address":"127.0.0.1", "Port":10000},
-				{"ID":1, "Address":"10.10.0.2", "Port":10000}
+				{"ID":0, "Address":"127.0.0.1", "Port":10000}
 			]
 		},
 

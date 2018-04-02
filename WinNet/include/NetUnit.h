@@ -19,6 +19,7 @@ namespace iocp
     enum OperatonType
     {
         OP_ACCEPT = 0,
+		OP_CONNECT,
         OP_RECIEVE,
         OP_SEND,
 		OP_DISCONNECT,
@@ -54,14 +55,16 @@ namespace iocp
         void RecieveRequest();					// WSARecv
         int SendRequest(void* buffer, int size);// WSASend		
 
-		void Accept(DWORD recvbytes);			// 통지 후 처리
-		void Recieve(DWORD recvbytes);
-		void Send(DWORD sendbytes);		
+		void Accepted(DWORD recvbytes);			// 통지 후 처리
+		void Recieved(DWORD recvbytes);
+		void Sent(DWORD sendbytes);		
 
 		void DisconnectRequest();				// postqueued 로 직접 넘김
 		void Disconnect();						// 즉시 종료 처리
 				
 		bool ConnectTo(const suho::winnet::SocketAddress& sockaddr); // blocking connect
+		bool AsyncConnectTo(const suho::winnet::SocketAddress& sockaddr);	// non blocking connect
+		void Connected(DWORD recvbytes);
 
 		bool IsConnected();		
         bool IsActive() const { return _is_active; }
@@ -94,6 +97,7 @@ namespace iocp
 
         void Cleanup();                                             // 연결종료시 초기화
 		void BindIocp();											// Iocp에 연결
+		void PrepareAsyncConnect();
 
 	protected:
 		const int					                                _index = -1;		// mem pool 상에서 인덱스
@@ -119,6 +123,7 @@ namespace iocp
 		SocketAddress												_remote_address;
 
         OverlappedEx                                                _overlapped_accept = {};
+		OverlappedEx												_overlapped_connect = {};
         OverlappedEx                                                _overlapped_recv = {};
 
 		Direction													_direction;

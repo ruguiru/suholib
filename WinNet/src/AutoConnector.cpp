@@ -67,11 +67,7 @@ void AutoConnector::ConnectUnit::TryConnect()
 	{
 		_timepoint = tp_now;
 
-		if (!_netunit->ConnectTo(_destination))
-		{
-            IocpLog(level::ERR, "connect() fail to [%s]", _destination.GetIP().ToString().c_str());
-			_netunit->DisconnectRequest();
-		}
+		_netunit->AsyncConnectTo(_destination);
 	}
 }
 

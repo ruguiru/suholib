@@ -60,8 +60,14 @@ void WorkerThread::Run(void * param)
         {
             NetUnit* new_connection = reinterpret_cast<NetUnit*>(over_ex->owner);
             if (new_connection)
-                new_connection->Accept(transferred_bytes);
+                new_connection->Accepted(transferred_bytes);
         }
+		else if (over_ex->operation == OP_CONNECT)
+		{
+			NetUnit* new_connection = reinterpret_cast<NetUnit*>(over_ex->owner);
+			if (new_connection)
+				new_connection->Connected(transferred_bytes);
+		}
 		else
 		{
 			OperatonType optype = over_ex->operation;
@@ -75,11 +81,11 @@ void WorkerThread::Run(void * param)
 				{
 					if (optype == OP_RECIEVE && transferred_bytes != 0)
 					{
-						connection->Recieve(transferred_bytes);
+						connection->Recieved(transferred_bytes);
 					}
 					else if (optype == OP_SEND && transferred_bytes != 0)
 					{
-						connection->Send(transferred_bytes);
+						connection->Sent(transferred_bytes);
 					}
 					else if (optype == OP_DISCONNECT)
 					{

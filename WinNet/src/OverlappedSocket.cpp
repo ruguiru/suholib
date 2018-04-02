@@ -131,11 +131,16 @@ bool OverlappedSocket::Reuse()
 	return true;
 }
 
-void OverlappedSocket::SetUpdateAcceptContext(SOCKET listen_socket)
+bool OverlappedSocket::SetUpdateAcceptContext(SOCKET listen_socket)
 {
     int result = setsockopt(_socket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
         reinterpret_cast<const char*>(&listen_socket), sizeof(listen_socket));
-    if (result == SOCKET_ERROR)
-        LastError("SetOpt SO_UPDATE_ACCEPT_CONTEXT");
+	if (result == SOCKET_ERROR)
+	{
+		IocpLog(level::FATAL, "SetOpt SO_UPDATE_ACCEPT_CONTEXT");
+		return false;
+	}
+
+	return true;
 }
 

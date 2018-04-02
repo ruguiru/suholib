@@ -39,11 +39,13 @@ void BasicSocket::ShutDown(int operation)
 
 bool BasicSocket::Bind(const suho::winnet::SocketAddress & sockaddr)
 {
-    if (_socket == INVALID_SOCKET)
+    if (_socket != INVALID_SOCKET)
     {
-        Init();
-        SetOption();
+		return false;
     }
+
+	Init();
+	SetOption();
 
 	int result = bind(_socket, sockaddr.GetSockAddr(), sockaddr.GetSize());
 	if (result == SOCKET_ERROR)

@@ -1,6 +1,8 @@
 #include "ConnectSocket.h"
 #include "DNS.hpp"
 
+#include <WS2tcpip.h>
+
 using namespace suho::winnet::iocp;
 
 bool ConnectSocket::Init()
@@ -15,23 +17,55 @@ void ConnectSocket::SetOption()
 
 }
 
-bool ConnectSocket::Connect(const std::string & address, short port)
-{
-	if (_socket == INVALID_SOCKET)
+bool ConnectSocket::AsyncConnect(const suho::winnet::SocketAddress& sockaddr, LPOVERLAPPED overlapped)
+{	
+	LPFN_CONNECTEX ConnectEx = NULL;
+	if (!LoadConnectExFunction(ConnectEx))
+		return false;
+
+	if(!ConnectEx(_socket, sockaddr.GetSockAddr(), sockaddr.GetSize(), NULL, 0, NULL, overlapped))
 	{
-		Init();
-		SetOption();
+		if (GetLastError() != WSA_IO_PENDING)
+		{
+			IocpLog(level::INFO, "Error ConnectEx()");
+			return false;
+		}
 	}
 
-	IPAddress ip = DNS::GetIPAddressByName(address);
-	SocketAddress sockaddr(ip, port);
+	return true;
+}
 
-	int result = connect(_socket, sockaddr.GetSockAddr(), sockaddr.GetSize());
+bool ConnectSocket::SetUpdateConnectContext()
+{
+	int result = setsockopt(_socket, SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, NULL, 0);
 	if (result == SOCKET_ERROR)
 	{
-		LastError("connect()");
+		IocpLog(level::FATAL, "SetOpt SO_UPDATE_CONNECT_CONTEXT");
 		return false;
 	}
 
+	return true;
+}
+
+bool ConnectSocket::LoadConnectExFunction(LPFN_CONNECTEX& connectex)
+{
+	SOCKET sock = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, NULL, WSA_FLAG_OVERLAPPED);
+	if (sock == INVALID_SOCKET)
+		return false;
+
+	DWORD dwBytes = 0;
+	GUID guid = WSAID_CONNECTEX;
+	int result = WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER,
+		&guid, sizeof(guid),
+		static_cast<LPVOID>(&connectex), sizeof(connectex),
+		&dwBytes, NULL, NULL);
+	if (result != 0)
+	{
+		IocpLog(level::FATAL, "Load ConnectEx Fail");
+		closesocket(sock);
+		return false;
+	}	
+
+	closesocket(sock);
 	return true;
 }

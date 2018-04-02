@@ -36,7 +36,7 @@ namespace sock
 		void Enable() { _is_enable = true; }
 		void Disable() { _is_enable = false; }
 		
-        void SetUpdateAcceptContext(SOCKET listen_socket);
+        bool SetUpdateAcceptContext(SOCKET listen_socket);
 
 	private:
 		// Transmit 으로 Reuse 하는 경우 사용

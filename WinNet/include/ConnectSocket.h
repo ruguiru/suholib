@@ -15,8 +15,14 @@ namespace iocp
 		virtual bool Init() override;
 		virtual void SetOption() override;
 
-		// ip와 도메인네임 관계없이 연결 (address가 ip 또는 도메인네임)
-		bool Connect(const std::string& address, short port);
+		bool AsyncConnect(const suho::winnet::SocketAddress& sockaddr, LPOVERLAPPED overlapped);	// non blocking
+
+		bool SetUpdateConnectContext();
+
+	private:
+		bool LoadConnectExFunction(LPFN_CONNECTEX& connectex);
+
+	private:
 
 	};
 }
