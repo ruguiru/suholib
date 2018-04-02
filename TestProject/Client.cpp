@@ -43,7 +43,7 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 {
 	MyPacket recvpacket(packet, packetsize);
 
-    //ClientLog(level::INFO, "[%d] RecvPacket:%d", _index, recvpacket.GetProtocolID());		// LOG
+    ClientLog(level::INFO, "[%d] RecvPacket:%d", _index, recvpacket.GetProtocolID());		// LOG
 	Statistic::GetInstance()->AddRecvCount();
 
 	switch (recvpacket.GetProtocolID())	

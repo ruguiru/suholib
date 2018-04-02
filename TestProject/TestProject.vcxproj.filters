@@ -90,6 +90,9 @@
     <ClCompile Include="Statistic.cpp">
       <Filter>NetConcreteClasses</Filter>
     </ClCompile>
+    <ClCompile Include="TimeServer.cpp">
+      <Filter>NetConcreteClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_common.h">

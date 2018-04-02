@@ -16,6 +16,7 @@ namespace thread
 		ThreadManager() {}
 		~ThreadManager() {}
 
+		// 스레드 함수는 Fun에 함수 파리미터들은 ARGS 에 매핑된다.
 		template<typename Fun, typename... ARGS>
 		std::thread::id Create(const Fun& func, const ARGS&... args)
 		{

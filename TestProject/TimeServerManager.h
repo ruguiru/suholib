@@ -4,7 +4,8 @@
 #include "TimeServer.h"
 #include "Singleton.hpp"
 
-class TimeServerManager : public suho::winnet::iocp::ActiveNetUnitManager<TimeServer>, public suho::pattern::singleton::Singleton<TimeServerManager>
+class TimeServerManager : public suho::winnet::iocp::ActiveNetUnitManager<TimeServer>,
+						  public suho::pattern::singleton::Singleton<TimeServerManager>
 {
 public:
 	TimeServerManager() {}
@@ -13,11 +14,13 @@ public:
 private:
 	void OnInsert(long key) override
 	{
-
+		printf("On Insert TimeServer\n");
 	}
 
 	void OnRemove(long key) override
 	{
-
+		printf("On Remove TimeServer\n");
 	}
+
+	std::mutex							_mutex;
 };

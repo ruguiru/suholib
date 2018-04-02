@@ -34,12 +34,21 @@ void foo3(void*)
 
 void main()
 {
-	DateTime dt;
-	dt.SetDateTime(20120228000020);
+	std::string from_db_datetime("2012-02-28 00:00:20");						// DB 날짜시간 포맷으로 가져온 스트링
 
-	printf("dt    : %s\n", dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).c_str());
-	dt.Adjust(DAY(-10), SEC(-3), MIN(-1));
-	printf("dt    : %s\n", dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).c_str());
+	DateTime dt;
+	dt.SetDateTime(from_db_datetime, FORMAT(YYYY-MM-DD HH:MI:SS));				// DB와 동일한 포맷으로 등록
+	printf("dt    : %s\n", dt.ToString(FORMAT(YYYYMMDDHHMISS)).c_str());		// 사용자가 지정한 포맷으로 출력
+
+	dt.Adjust(DAY(-10), SEC(-3), MIN(-1));										// 세팅된 날짜 조정 연산
+	printf("dt    : %s\n", dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).c_str());	// 다시 포맷변경하여 출력
+
+	DateTime dt2;
+	dt2.SetNow();																// 현재 날짜시간으로 세팅
+	printf("dt2   : %s\n", dt2.ToString(FORMAT(YYYYMMDD)).c_str());				// 사용자가 지정한 포맷으로 출력(날짜만 출력)
+
+	long long elapsed_seconds = dt2 - dt;										// 두 날짜시간 사이의 차이를 초단위로 리턴
+	
 
 	DateTime dt_t = dt - MONTH(3) - SEC(1) + YEAR(4) - MIN(1);
 	printf("dt_t  : %s\n", dt_t.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).c_str());
@@ -55,14 +64,18 @@ void main()
 	printf("nanosec:%lld\n", w.Stop().ToNanoSeconds());
 	
 
-	TimePoint t1;
-	this_thread::sleep_for(100ms);
-	TimePoint t2;
+	//StopWatch w;					// 생성시 현재 시작으로 세팅
+	w.Start();						// 생성 후 Start()도 가능
+	TimePoint t1;					// 시점1
+	this_thread::sleep_for(100ms);	
+	TimeSpan ts = w.Stop();			// 경과시간 리턴
 
-	t2.Subtract(TimeSpan(30));
+	TimePoint t2;					// 시점2
+	t2.Add(TimeSpan(30));			// 시점2에 30초 +
 
-	TimeSpan ts = t2 - t1;
-
+	ts = t2 - t1;					// 시점2 - 시점1 = 경과시간
+	
+	// 경과시간을 각 단위로 변환
 	printf("min:%lf\n", ts.ToMinutes());
 	printf("sec:%f\n", ts.ToSeconds());
 	printf("microsec:%lld\n", ts.ToMicroSeconds());

@@ -19,7 +19,7 @@ SOCKET TCPSocket::Accept(SocketAddress & address)
 {
 	if (_socket == INVALID_SOCKET)
 	{
-		return NULL;
+		return INVALID_SOCKET;
 	}
 
 	char temp[32] = {};
@@ -30,6 +30,7 @@ SOCKET TCPSocket::Accept(SocketAddress & address)
 	if (newsock == INVALID_SOCKET)
 	{
 		LastError("accept()");
+		return INVALID_SOCKET;
 	}
 	else
 	{

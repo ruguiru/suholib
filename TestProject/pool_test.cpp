@@ -19,35 +19,32 @@ public:
 
 void main()
 {
-	//{
-	//	ObjectPool<Obj, true> obj;
-	//	obj.Create(1000);
+	{
+		// 사용자타입 Obj, indexing 버전으로 설정
+		// Obj 타입에 index 메모리가 붙게 되며 멤버함수 GetIndex()도 추가되어 확인가능하다
+		ObjectPool<Obj, true> obj;
+		obj.Create(1000);				// 최초 1000개 생성
 
-	//	Obj* temp = obj.Borrow();
-	//	temp->a;
-	//	int index = obj.GetIndex(temp);
+		Obj* temp = obj.Borrow();		// Obj 한개 빌려옴
+		temp->a;
+		int index = obj.GetIndex(temp); // Index 값 확인
 
-	//	Obj* temp2 = obj.Borrow();
-	//	temp2->a;
+		obj.Return(temp);				// Obj 사용 후 반환
 
-	//	index = obj.GetIndex(temp2);
-
-	//	obj.Return(temp);
-
-	//	index = obj.GetIndex(temp2);
-
-	//	Obj* temp3 = obj.Borrow();
-	//	index = obj.GetIndex(temp3);
-	//}
+		Obj* temp2 = obj.Borrow();
+		index = obj.GetIndex(temp2);
+	}
 
 	{
-	    //ManualObjectPool<Obj> obj;
+		// 외부 생성 후 직접 노드 삽입
+	    ManualObjectPool<Obj> obj;
 
-	    //obj.Add(new Obj(1));
-	    //obj.Add(new Obj(2));
-	    //obj.Add(new Obj(3));
-	    //obj.Add(new Obj(4));
+	    obj.Add(new Obj(1));
+	    obj.Add(new Obj(2));
+	    obj.Add(new Obj(3));
+	    obj.Add(new Obj(4));
 
+		// 배열로 생성 후 삽입도 가능
         ManualObjectPool<Obj, true> obj;
         Obj* arr = new Obj[4];
         obj.SetArrayStartPtr(arr);
