@@ -52,19 +52,19 @@ namespace iocp
 		
 		// iocp에 요청
         void AcceptRequest();					// AcceptEx
+		bool ConnectRequest(const suho::winnet::SocketAddress& sockaddr);	// non blocking connect
         void RecieveRequest();					// WSARecv
         int SendRequest(void* buffer, int size);// WSASend		
-
+		// 요청 결과
 		void Accepted(DWORD recvbytes);			// 통지 후 처리
+		void Connected(DWORD recvbytes);
 		void Recieved(DWORD recvbytes);
 		void Sent(DWORD sendbytes);		
 
 		void DisconnectRequest();				// postqueued 로 직접 넘김
 		void Disconnect();						// 즉시 종료 처리
 				
-		bool ConnectTo(const suho::winnet::SocketAddress& sockaddr); // blocking connect
-		bool AsyncConnectTo(const suho::winnet::SocketAddress& sockaddr);	// non blocking connect
-		void Connected(DWORD recvbytes);
+		bool ConnectTo(const suho::winnet::SocketAddress& sockaddr); // blocking connect	
 
 		bool IsConnected();		
         bool IsActive() const { return _is_active; }

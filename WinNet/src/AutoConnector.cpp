@@ -67,7 +67,7 @@ void AutoConnector::ConnectUnit::TryConnect()
 	{
 		_timepoint = tp_now;
 
-		_netunit->AsyncConnectTo(_destination);
+		_netunit->ConnectRequest(_destination);
 	}
 }
 

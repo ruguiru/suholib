@@ -14,12 +14,12 @@ public:
 private:
 	void OnInsert(long key) override
 	{
-		printf("On Insert TimeServer\n");
+		printf("On Insert TimeServer\n");	// LOG
 	}
 
 	void OnRemove(long key) override
 	{
-		printf("On Remove TimeServer\n");
+		printf("On Remove TimeServer\n");	// LOG
 	}
 
 	std::mutex							_mutex;

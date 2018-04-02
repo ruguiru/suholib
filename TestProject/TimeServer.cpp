@@ -8,8 +8,8 @@ using namespace suho::winnet::iocp;
 void TimeServer::OnInit()
 {
 	_recv_buffersize = 1024 * 4;
-	_recv_socket_buffersize = 1024 * 10;		// TEST
-	_send_socket_buffersize = 1024 * 20;		// TEST
+	_recv_socket_buffersize = 1024 * 10;
+	_send_socket_buffersize = 1024 * 20;
 }
 
 void TimeServer::OnConnect()

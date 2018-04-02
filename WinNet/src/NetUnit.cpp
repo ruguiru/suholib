@@ -55,9 +55,7 @@ void NetUnit::Init(Direction direction)
 void NetUnit::AcceptRequest()
 {
 	if (atomic_load(&_is_active))
-	{
 		return;
-	}
 
 	if (!_listen_socket->IsValidSocket())
 	{
@@ -68,46 +66,11 @@ void NetUnit::AcceptRequest()
     _own_socket->AsyncAccept(_listen_socket->GetSocket(), _accept_buffer.GetWritePos(), _accept_buffer.GetWritableSize(), &_overlapped_accept);
 }
 
-void NetUnit::RecieveRequest()
-{
-	if (!atomic_load(&_is_active))
-	{
-		return;
-	}
-
-    _overlapped_recv.Reset();
-
-	if (!_own_socket->AsyncRecieve(_recv_buffer.GetWritePos(), _recv_buffer.GetWritableSize(), &_overlapped_recv))
-	{
-		DisconnectRequest();
-	}
-}
-
-int NetUnit::SendRequest(void * buffer, int size)
-{
-	if (!atomic_load(&_is_active))
-	{
-		return -1;
-	}
-
-	OverlappedEx* over_send = OverlappedPool::GetInstance()->GetOverlapped(OP_SEND, this);
-
-    int sendbytes = _own_socket->AsyncSend(reinterpret_cast<char*>(buffer), size, over_send);
-	if (sendbytes == -1)
-	{
-		OverlappedPool::GetInstance()->ReturnObj(over_send);
-		DisconnectRequest();
-		return -1;
-	}
-
-	return sendbytes;
-}
-
 void NetUnit::Accepted(DWORD recvbytes)
 {
 	UNREFERENCED(recvbytes)
 
-	INT localaddr_len = 0;
+		INT localaddr_len = 0;
 	INT remoteaddr_len = 0;
 
 	SOCKADDR* localaddr = NULL;
@@ -127,8 +90,56 @@ void NetUnit::Accepted(DWORD recvbytes)
 		_remote_address.Set(remoteaddr);
 	}
 
-	if( _own_socket->SetUpdateAcceptContext(_listen_socket->GetSocket()))
+	if (_own_socket->SetUpdateAcceptContext(_listen_socket->GetSocket()))
 		IoStart();
+}
+
+bool NetUnit::ConnectRequest(const suho::winnet::SocketAddress & sockaddr)
+{
+	if (atomic_load(&_is_active))
+	{
+		return false;
+	}
+
+	ConnectSocket* socket = dynamic_cast<ConnectSocket*>(_own_socket.get());
+	if (socket == nullptr)
+	{
+		IocpLog(level::FATAL, "connect() fail to [%s] ConnectSocket is null", sockaddr.GetIP().ToString().c_str());
+		return false;
+	}
+
+	if (!socket->AsyncConnect(sockaddr, &_overlapped_connect))
+	{
+		IocpLog(level::ERR, "connect() fail to [%s] AsyncConnect Fail", sockaddr.GetIP().ToString().c_str());
+		return false;
+	}
+
+	return true;
+}
+
+void NetUnit::Connected(DWORD recvbytes)
+{
+	UNREFERENCED(recvbytes)
+
+	ConnectSocket* socket = dynamic_cast<ConnectSocket*>(_own_socket.get());
+	if (socket == nullptr)
+		return;
+
+	if (socket->SetUpdateConnectContext())
+		IoStart();
+}
+
+void NetUnit::RecieveRequest()
+{
+	if (!atomic_load(&_is_active))
+		return;
+
+    _overlapped_recv.Reset();
+
+	if (!_own_socket->AsyncRecieve(_recv_buffer.GetWritePos(), _recv_buffer.GetWritableSize(), &_overlapped_recv))
+	{
+		DisconnectRequest();
+	}
 }
 
 void NetUnit::Recieved(DWORD recvbytes)
@@ -139,9 +150,7 @@ void NetUnit::Recieved(DWORD recvbytes)
 	while (_processing_size > 0)
 	{
 		if (!atomic_load(&_is_active))
-		{
 			return;
-		}
 
 		DWORD packetsize = HeaderParsing(_recv_buffer.GetReadPos(), _processing_size);
 		if (packetsize == 0)
@@ -150,9 +159,7 @@ void NetUnit::Recieved(DWORD recvbytes)
 		PacketProcessing(_recv_buffer.GetReadPos(), packetsize);
 
 		if (!atomic_load(&_is_active))
-		{
 			return;
-		}
 
 		// read_pos 를 패킷크기단위로 이동시키므로 HeaderParsing에서는 항상 패킷 시작점을 가리킴
 		_recv_buffer.ShiftReadPos(packetsize);
@@ -160,13 +167,29 @@ void NetUnit::Recieved(DWORD recvbytes)
 	}
 
 	if (!atomic_load(&_is_active))
-	{
 		return;
-	}
-	
+
 	_recv_buffer.CarriageReturn();
-	
+
 	RecieveRequest();
+}
+
+int NetUnit::SendRequest(void * buffer, int size)
+{
+	if (!atomic_load(&_is_active))
+		return -1;
+
+	OverlappedEx* over_send = OverlappedPool::GetInstance()->GetOverlapped(OP_SEND, this);
+
+    int sendbytes = _own_socket->AsyncSend(reinterpret_cast<char*>(buffer), size, over_send);
+	if (sendbytes == -1)
+	{
+		OverlappedPool::GetInstance()->ReturnObj(over_send);
+		DisconnectRequest();
+		return -1;
+	}
+
+	return sendbytes;
 }
 
 void NetUnit::Sent(DWORD sendbytes)
@@ -223,43 +246,6 @@ bool NetUnit::ConnectTo(const suho::winnet::SocketAddress & sockaddr)
 
 	return success;
 }
-
-bool NetUnit::AsyncConnectTo(const suho::winnet::SocketAddress & sockaddr)
-{
-	if (atomic_load(&_is_active))
-	{
-		printf("connect() fail to [%s] already connedted", sockaddr.GetIP().ToString().c_str());	// TEST
-		return false;
-	}
-
-	ConnectSocket* socket = dynamic_cast<ConnectSocket*>(_own_socket.get());
-	if (socket == nullptr)
-	{
-		IocpLog(level::ERR, "connect() fail to [%s] ConnectSocket is null", sockaddr.GetIP().ToString().c_str());
-		return false;
-	}
-
-	if (!socket->AsyncConnect(sockaddr, &_overlapped_connect))
-	{
-		IocpLog(level::ERR, "connect() fail to [%s] AsyncConnect Fail", sockaddr.GetIP().ToString().c_str());
-		return false;
-	}
-
-	return true;
-}
-
-void NetUnit::Connected(DWORD recvbytes)
-{
-	UNREFERENCED(recvbytes)
-
-	ConnectSocket* socket = dynamic_cast<ConnectSocket*>(_own_socket.get());
-	if (socket == nullptr)
-		return;
-
-	if( socket->SetUpdateConnectContext() )
-		IoStart();
-}
-
 
 void NetUnit::IoStart()
 {
