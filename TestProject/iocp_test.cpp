@@ -31,20 +31,26 @@ void Terminator()
     system("pause");
 }
 
+// 통계 클래스를 제외하고는 아래 형식을 지켜야 한다.
 int main()
 {
 	atexit(Terminator);
 
-	// rootpath와 workerthread couunt 설정. 0이면 코어개수*2
-    Iocp->InitIocp("../", 0);           // create workerthread
+    Iocp->InitIocp("../", 0);           // configfile path, create workerthread, 0이면 코어개수*2
 
-	Iocp->InitAccepts<Client>();        // listen(), acceptex()
-    Iocp->InitConnects<TimeServer>();	
+	Iocp->InitAccepts<Client>();        // bind(), listen(), acceptex()
+	// 또 다른 타입의 Accepts 커넥션들 등록
+	// ...
+	
+    Iocp->InitConnects<TimeServer>();	// bind(), connectex()
+	// 또 다른 타입의 Connect 커넥션들 등록
+	// ...
 	
 	Iocp->Start();                      // start workerthread, start auto connect
-	Statistic::GetInstance()->Start();
 
-	Iocp->Wait();						// BaseThread 상속받아 구현한 모든 스레드 기다림
+	Statistic::GetInstance()->Start();	// 통계 (초당 평균 send, recv)
+
+	Iocp->Wait();						// Iocp 조건변수 및 TreadManager로 등록한 모든 스레드 기다림
 
 	Terminator();
 }

@@ -88,9 +88,9 @@ namespace log
 
 			_fw.Open(filename, _path, std::ios::app);            
 			_fw << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n" << close;
-//#ifdef _DEBUG
+#ifdef _DEBUG
 			cout << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n";
-//#endif
+#endif
 		}
 		else if (_filecycle == cycle::HOURLY)
 		{
@@ -105,9 +105,9 @@ namespace log
 
 			_fw.Open(filename, appended_path, std::ios::app);			
 			_fw << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n" << close;
-//#ifdef _DEBUG
+#ifdef _DEBUG
 			cout << time << " " << ConvertStringFromLoglevel(loglevel) << " " << message << "\n";
-//#endif
+#endif
 		}
 	}
 
