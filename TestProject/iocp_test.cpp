@@ -4,14 +4,7 @@
 #include "Client.h"
 #include "TimeServer.h"
 #include "Statistic.h"
-#include "LogContainer.h"
 
-#include <thread>
-#include <chrono>
-#include <future>
-#include <list>
-#include <array>
-#include <type_traits>
 #include <stdlib.h>
 
 using namespace std;
