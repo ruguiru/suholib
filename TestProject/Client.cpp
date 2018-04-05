@@ -54,8 +54,8 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 		int endsign = 0;
 		recvpacket >> data >> endsign;
 
-		//if (_index == 9999)		// TEST
-		//	printf("[%d] Recv : %d\n", _index, endsign);
+		if (_index == 9999)		// TEST
+			printf("[%d] Recv : %d\n", _index, endsign);		// 1111 이면 정상
 		{
 			MyPacket sendPacket(1);
 			sendPacket << "abcdefgh";
@@ -70,8 +70,8 @@ void Client::PacketProcessing(const void* packet, DWORD packetsize)
 		int endsign = 0;
 		recvpacket >> data >> endsign;
 
-		//if (_index == 9999)		// TEST
-		//	printf("[%d] Recv  : %d\n", _index, endsign);
+		if (_index == 9999)		// TEST
+			printf("[%d] Recv  : %d\n", _index, endsign);		// 1111 이면 정상
 		{
 			MyPacket sendPacket(recvpacket.GetBuffer(), recvpacket.GetPacketSize());
 			ClientManager::GetInstance()->BroadCast(recvpacket);

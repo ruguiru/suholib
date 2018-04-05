@@ -45,7 +45,19 @@ void main()
 
 	DateTime dt2;
 	dt2.SetNow();																// 현재 날짜시간으로 세팅
-	printf("dt2   : %s\n", dt2.ToString(FORMAT(YYYYMMDD)).c_str());				// 사용자가 지정한 포맷으로 출력(날짜만 출력)
+	printf("dt2   : %s\n", dt2.ToString(FORMAT(YYYY/MM/DD)).c_str());			// 사용자가 지정한 포맷으로 출력(날짜만 출력)
+
+	DateTime dt3;
+	dt3.SetDate("2014/11/22", FORMAT(YYYY/MM/DD));
+	printf("dt3   : %s\n", dt3.ToString(FORMAT(YYYY/MM/DD)).c_str());
+
+	DateTime dt4;
+	dt4.SetDate("19851021", FORMAT(YYYYMMDD));
+	printf("dt4   : %s\n", dt4.ToString(FORMAT(YYYYMMDD)).c_str());
+
+	DateTime dt5;
+	dt5.SetDateTime("1985y 10m 21d - 11h 01m 23s", FORMAT(CustomFormat1));		// 굳이 포맷형식으로 타입을 지정하지 않아도 된다.
+	printf("dt5   : %s\n", dt5.ToString(FORMAT(CustomFormat1)).c_str());
 
 	long long elapsed_seconds = dt2 - dt;										// 두 날짜시간 사이의 차이를 초단위로 리턴
 	
