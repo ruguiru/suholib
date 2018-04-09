@@ -152,7 +152,7 @@ void Timer::Run(void* param)
 
                 if (funcinfo._remain_msec <= 0)
                 {
-                    std::async(std::launch::async, funcinfo._callback, funcinfo._arg);
+                    auto f = std::async(std::launch::async, funcinfo._callback, funcinfo._arg);
 
                     funcinfo.SetRemainTimeCount(funcinfo._interval_msec);
 
@@ -160,6 +160,8 @@ void Timer::Run(void* param)
                     {
                         _timerlist.erase(list_iter--);
                     }
+
+					f.get();
                 }
 
                 // 오차 보정

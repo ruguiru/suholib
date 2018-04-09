@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <atomic>
-
+#include <mutex>
 #include "Noncopyable.h"
 
 namespace suho {
@@ -52,7 +52,7 @@ namespace singleton
             {
                 if (_instance == nullptr)
                 {
-                    _instance = new T();
+					std::call_once(_flag, []() {_instance = new T(); });                    
                     atexit(Destroy);
                 }
 
@@ -61,6 +61,7 @@ namespace singleton
 
         private:
             static T*               _instance;
+			static std::once_flag	_flag;
         };
 
         template<typename T> T* DynamicSingleton<T>::_instance = nullptr;

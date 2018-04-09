@@ -1,4 +1,5 @@
 
+#include "test_common.h"
 #include "EventSync.h"
 
 #include <future>
@@ -41,7 +42,12 @@ void th2()
 
 int main()
 {
-	auto f1 = std::async(th1);
+	
+	printf("before\n");
+	auto f1 = std::async(th1);	// async 는 스코프 안에서만 비동기 스코프나가기전까지 get 안해주면 기다린다	
+	
+
+	printf("after\n");
 	auto f2 = std::async(th2);
 
     f1.get();

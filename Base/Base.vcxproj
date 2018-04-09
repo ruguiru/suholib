@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayLength.h" />
     <ClInclude Include="include\atomic_shared_ptr.hpp" />
     <ClInclude Include="include\atomic_weak_ptr.hpp" />
     <ClInclude Include="include\BasicFormat.h" />
@@ -166,7 +167,7 @@
     <ClInclude Include="include\json.hpp" />
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\LogHelper.h" />
-    <ClInclude Include="include\Noncopyable.h" />
+    <ClInclude Include="include\NonCopyable.h" />
     <ClInclude Include="include\NonMovable.h" />
     <ClInclude Include="include\ObjectPool.hpp" />
     <ClInclude Include="include\Prototype.h" />

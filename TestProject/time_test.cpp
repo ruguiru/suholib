@@ -13,6 +13,8 @@ void foo(void*)
 	DateTime dt;
 	dt.SetNow();
 
+	this_thread::sleep_for(10s);
+
 	printf("Flat : %s\n", dt.ToString(FORMAT(YYYY-MM-DD HH:MI:SS)).c_str());
 }
 
