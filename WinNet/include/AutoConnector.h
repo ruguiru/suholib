@@ -43,7 +43,9 @@ namespace iocp
 		~AutoConnector() override {}
 
 		void Register(const jss::atomic_shared_ptr<NetUnit>& netunit,
-			int interval_msec, const std::string& address, short port);		
+					   int interval_msec,
+					   const std::string& address,
+					   short port);
 
 		void Destroy() { _connect_list.clear(); }
 

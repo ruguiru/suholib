@@ -18,7 +18,7 @@ NetUnit::NetUnit(int index):
 
 NetUnit::~NetUnit()
 {
-	IocpLog(level::FATAL, "[%d] NetUnit Destroy!!!!!!", _index);
+	IocpLog(level::LogLevel::FATAL, "[%d] NetUnit Destroy!!!!!!", _index);
 
 	_overlapped_accept.Clear();
 	_overlapped_connect.Clear();
@@ -29,7 +29,7 @@ void NetUnit::Init(Direction direction)
 {	
 	_direction = direction;
 
-	if (_direction == DIR_CONNECT_TO)
+	if (_direction == Direction::DIR_CONNECT_TO)
 	{
 		_own_socket = std::make_unique<suho::winnet::iocp::ConnectSocket>();
 		PrepareAsyncConnect();
@@ -40,13 +40,13 @@ void NetUnit::Init(Direction direction)
 	_accept_buffer.Create(1024);
 	_recv_buffer.Create(_recv_buffersize);
 
-    _overlapped_accept.operation = OP_ACCEPT;
+    _overlapped_accept.operation = OperatonType::OP_ACCEPT;
     _overlapped_accept.owner = this;
 
-	_overlapped_connect.operation = OP_CONNECT;
+	_overlapped_connect.operation = OperatonType::OP_CONNECT;
 	_overlapped_connect.owner = this;
 
-    _overlapped_recv.operation = OP_RECIEVE;
+    _overlapped_recv.operation = OperatonType::OP_RECIEVE;
     _overlapped_recv.owner = this;	
 
     OnInit();
@@ -59,7 +59,7 @@ void NetUnit::AcceptRequest()
 
 	if (!_listen_socket->IsValidSocket())
 	{
-		IocpLog(level::ERR, "Accept() listensocket is not allocate");
+		IocpLog(level::LogLevel::ERR, "Accept() listensocket is not allocate");
 		return;
 	}
 
@@ -82,7 +82,7 @@ void NetUnit::Accepted(DWORD recvbytes)
 
 	if (remoteaddr_len == 0)
 	{
-		IocpLog(level::ERR, "GetAcceptExSockaddrs Fail");
+		IocpLog(level::LogLevel::ERR, "GetAcceptExSockaddrs Fail");
 	}
 	else
 	{
@@ -104,13 +104,13 @@ bool NetUnit::ConnectRequest(const suho::winnet::SocketAddress & sockaddr)
 	ConnectSocket* socket = dynamic_cast<ConnectSocket*>(_own_socket.get());
 	if (socket == nullptr)
 	{
-		IocpLog(level::FATAL, "connect() fail to [%s] ConnectSocket is null", sockaddr.GetIP().ToString().c_str());
+		IocpLog(level::LogLevel::FATAL, "connect() fail to [%s] ConnectSocket is null", sockaddr.GetIP().ToString().c_str());
 		return false;
 	}
 
 	if (!socket->AsyncConnect(sockaddr, &_overlapped_connect))
 	{
-		IocpLog(level::ERR, "connect() fail to [%s] AsyncConnect Fail", sockaddr.GetIP().ToString().c_str());
+		IocpLog(level::LogLevel::ERR, "connect() fail to [%s] AsyncConnect Fail", sockaddr.GetIP().ToString().c_str());
 		return false;
 	}
 
@@ -179,7 +179,7 @@ int NetUnit::SendRequest(void * buffer, int size)
 	if (!atomic_load(&_is_active))
 		return -1;
 
-	OverlappedEx* over_send = OverlappedPool::GetInstance()->GetOverlapped(OP_SEND, this);
+	OverlappedEx* over_send = OverlappedPool::GetInstance()->GetOverlapped( OperatonType::OP_SEND, this);
 
     int sendbytes = _own_socket->AsyncSend(reinterpret_cast<char*>(buffer), size, over_send);
 	if (sendbytes == -1)
@@ -205,12 +205,12 @@ void NetUnit::DisconnectRequest()
 		_own_socket->SetLinger(true, 0);
 		_own_socket->ShutDown(SD_BOTH);
 
-		if (_direction == DIR_CONNECT_TO)
+		if (_direction == Direction::DIR_CONNECT_TO)
 			_own_socket->Close();
 		else
 			_own_socket->Disable();
 
-		OverlappedEx* over_disconnect = OverlappedPool::GetInstance()->GetOverlapped(OP_DISCONNECT, this);
+		OverlappedEx* over_disconnect = OverlappedPool::GetInstance()->GetOverlapped( OperatonType::OP_DISCONNECT, this);
 
 		PostQueuedCompletionStatus(Iocp->GetIocpHandle(), 0, reinterpret_cast<ULONG_PTR>(this), over_disconnect);
 	}
@@ -222,7 +222,7 @@ void NetUnit::Disconnect()
 
 	Cleanup();
 
-	if (_direction == DIR_ACCEPT_FROM)
+	if (_direction == Direction::DIR_ACCEPT_FROM)
 	{		
 		_own_socket->Reuse();
 		AcceptRequest();
@@ -252,7 +252,7 @@ void NetUnit::IoStart()
 	bool flag = false;
 	if (_is_active.compare_exchange_strong(flag, true))
 	{
-		if( _direction == DIR_ACCEPT_FROM)
+		if( _direction == Direction::DIR_ACCEPT_FROM)
 			BindIocp();
 
 		OnConnect();

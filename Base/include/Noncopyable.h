@@ -1,19 +1,21 @@
 #pragma once
 
-namespace suho {
-namespace idioms
+namespace suho
 {
-    class NonCopyable
-    {
-    protected:
-        NonCopyable() {}
-        virtual ~NonCopyable() {}
-    private:
-        NonCopyable(const NonCopyable&) = delete;
-        const NonCopyable& operator=(const NonCopyable&) = delete;
+	namespace idioms
+	{
+		class NonCopyable
+		{
+		protected:
+			NonCopyable() {}
+			virtual ~NonCopyable() {}
 
-        NonCopyable(NonCopyable&&) = delete;
-        NonCopyable& operator=(NonCopyable&&) = delete;
-    };
-}   // end namespace idioms
+		private:
+			NonCopyable( const NonCopyable& ) = delete;
+			const NonCopyable& operator=( const NonCopyable& ) = delete;
+
+			NonCopyable( NonCopyable&& ) = delete;
+			NonCopyable& operator=( NonCopyable&& ) = delete;
+		};
+	}   // end namespace idioms
 }   // end namespace suho

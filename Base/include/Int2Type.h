@@ -1,11 +1,12 @@
 #pragma once
 
-namespace suho {
-namespace idioms
+namespace suho
 {
-    template<int N> struct Int2Type
-    {
-        enum { value = N };
-    };
-}   // end namespace idioms
+	namespace idioms
+	{
+		template<int N> struct Int2Type
+		{
+			enum { value = N };
+		};
+	}   // end namespace idioms
 }   // end namespace suho

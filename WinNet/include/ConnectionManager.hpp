@@ -48,7 +48,8 @@ namespace iocp
 		int GetSize() const { return _netunit_storage.size(); }
 
 	private:
-		typedef std::vector<jss::atomic_shared_ptr<NetUnit>>			Storage;
+		//typedef std::vector<jss::atomic_shared_ptr<NetUnit>>			Storage;
+		using Storage = std::vector<jss::atomic_shared_ptr<NetUnit>>;
 		// 서버 종료전까지 보관하여 sptr에 의해 메모리 삭제되는 일이 없게 한다
 		Storage															_netunit_storage;
 		
@@ -63,7 +64,7 @@ namespace iocp
 		while (size--)
 		{
 			jss::atomic_shared_ptr<NetUnit> netunit = std::make_shared<T>(index++);
-			netunit->Init(DIR_ACCEPT_FROM);
+			netunit->Init( Direction::DIR_ACCEPT_FROM);
 			netunit->SetListenSocket(listen_sock);
 			netunit->AcceptRequest();
 
@@ -77,7 +78,7 @@ namespace iocp
 	{
 		int index = _netunit_storage.size();
 		jss::atomic_shared_ptr<NetUnit> netunit = std::make_shared<T>(index++);
-		netunit->Init(DIR_CONNECT_TO);
+		netunit->Init( Direction::DIR_CONNECT_TO);
 		netunit->SetConnectID(id);
 
 		_netunit_storage.push_back(netunit);

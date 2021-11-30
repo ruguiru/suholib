@@ -80,7 +80,7 @@ namespace iocp
 
 		ConnectionManager::GetInstance()->InitAcceptConnections<T>(max_accept, listensock);		// create and acceptex
 
-        IocpLog(level::INFO, "Init [%s] Accept type! Count:%d Port:%d", type_name.c_str(), max_accept, port);
+        IocpLog(level::LogLevel::INFO, "Init [%s] Accept type! Count:%d Port:%d", type_name.c_str(), max_accept, port);
 	}
 
 	template<typename T>
@@ -104,7 +104,7 @@ namespace iocp
 
 			ConnectionManager::GetInstance()->InitConnectConnection<T>(interval_msec, id, address, port);
 
-            IocpLog(level::INFO, "Init [%s] Connect type! Address:%s Port:%d", type_name.c_str(), address.c_str(), port);
+            IocpLog(level::LogLevel::INFO, "Init [%s] Connect type! Address:%s Port:%d", type_name.c_str(), address.c_str(), port);
 		}
 	}
 

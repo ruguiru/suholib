@@ -31,7 +31,7 @@ void Statistic::Calculate()
 	double avg_recv_per_sec = static_cast<double>(_recv_packet_count) / static_cast<double>(sec);
 	double avg_send_per_sec = static_cast<double>(_send_packet_count) / static_cast<double>(sec);
 
-	StatisticLog(level::INFO, "CU:%d Recv/sec:%f Send/sec:%f", 
+	StatisticLog(level::LogLevel::INFO, "CU:%d Recv/sec:%f Send/sec:%f",
 		cu, avg_recv_per_sec, avg_send_per_sec);
 
 	_recv_packet_count = 0;

@@ -21,12 +21,12 @@ public:
 
 	}
 
-	AbstractPacket(AbstractPacket&& other) :
+	AbstractPacket(AbstractPacket&& other) noexcept :
 		_headersize(other._headersize), _buffersize(other._buffersize),
 		_stream_buffer(std::move(other._stream_buffer))
 	{
-		//other._headersize = 0;
-		//other._buffersize = 0;
+		other._headersize = 0;
+		other._buffersize = 0;
 	}
 
 	virtual ~AbstractPacket()
@@ -61,9 +61,9 @@ public:
 #endif // _DEBUG
 
 protected:
-	const int						_headersize;
-	const int						_buffersize;
-	suho::buffer::StreamBuffer		_stream_buffer;
+	int							_headersize;
+	int							_buffersize;
+	suho::buffer::StreamBuffer	_stream_buffer;
 };
 
 template<typename T>

@@ -27,7 +27,7 @@ bool ConnectSocket::AsyncConnect(const suho::winnet::SocketAddress& sockaddr, LP
 	{
 		if (GetLastError() != WSA_IO_PENDING)
 		{
-			IocpLog(level::INFO, "Error ConnectEx()");
+			IocpLog(level::LogLevel::INFO, "Error ConnectEx()");
 			return false;
 		}
 	}
@@ -40,7 +40,7 @@ bool ConnectSocket::SetUpdateConnectContext()
 	int result = setsockopt(_socket, SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, NULL, 0);
 	if (result == SOCKET_ERROR)
 	{
-		IocpLog(level::FATAL, "SetOpt SO_UPDATE_CONNECT_CONTEXT");
+		IocpLog(level::LogLevel::FATAL, "SetOpt SO_UPDATE_CONNECT_CONTEXT");
 		return false;
 	}
 
@@ -61,7 +61,7 @@ bool ConnectSocket::LoadConnectExFunction(LPFN_CONNECTEX& connectex)
 		&dwBytes, NULL, NULL);
 	if (result != 0)
 	{
-		IocpLog(level::FATAL, "Load ConnectEx Fail");
+		IocpLog(level::LogLevel::FATAL, "Load ConnectEx Fail");
 		closesocket(sock);
 		return false;
 	}	

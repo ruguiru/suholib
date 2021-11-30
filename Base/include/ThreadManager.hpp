@@ -7,61 +7,63 @@
 
 #include "Singleton.hpp"
 
-namespace suho {
-namespace thread
+namespace suho
 {
-    class ThreadManager : public suho::pattern::singleton::Singleton<ThreadManager>
-    {
-    public:
-		ThreadManager() {}
-		~ThreadManager() {}
-
-		// 스레드 함수는 Fun에 함수 파리미터들은 ARGS 에 매핑된다.
-		template<typename Fun, typename... ARGS>
-		std::thread::id Create(const Fun& func, const ARGS&... args)
+	namespace thread
+	{
+		class ThreadManager : public suho::pattern::singleton::Singleton<ThreadManager>
 		{
-			std::lock_guard<std::mutex>		lock(_mutex);			
+		public:
+			ThreadManager() {}
+			~ThreadManager() {}
 
-			auto th = std::make_unique<std::thread>(func, args...);
-			std::thread::id thread_id = th->get_id();
+			// 스레드 함수는 Fun에 함수 파리미터들은 ARGS 에 매핑된다.
+			template<typename Fun, typename... ARGS>
+			std::thread::id Create( const Fun& func, const ARGS&... args )
+			{
+				std::lock_guard<std::mutex> lock( _mutex );
 
-			_threads.insert(std::make_pair(thread_id, std::move(th) ));
+				auto th = std::make_unique<std::thread>( func, args... );
+				std::thread::id thread_id = th->get_id();
 
-			return thread_id;
-		}
+				_threads.insert( std::make_pair( thread_id, std::move( th ) ) );
 
-		void Join(std::thread::id thread_id)
-		{
-			std::lock_guard<std::mutex>		lock(_mutex);
-
-			auto pos = _threads.find(thread_id);
-            auto& th = pos->second;
-			if (th->joinable())
-				th->join();
-			
-			_threads.erase(thread_id);
-		}
-
-		void JoinAll()
-		{
-			std::lock_guard<std::mutex>		lock(_mutex);
-
-			if (_threads.empty())
-				return;
-
-			for (auto& item : _threads)
-			{		
-				auto& th = item.second;
-				if (th->joinable())
-					th->join();
+				return thread_id;
 			}
 
-			_threads.clear();
-		}
+			void Join( std::thread::id thread_id )
+			{
+				std::lock_guard<std::mutex> lock( _mutex );
 
-	private:
-		std::map<std::thread::id, std::unique_ptr<std::thread>>				_threads;
-		std::mutex											                _mutex;
-    };
-}   // end thread
+				auto pos = _threads.find( thread_id );
+				auto& th = pos->second;
+				if ( th->joinable() )
+					th->join();
+
+				_threads.erase( thread_id );
+			}
+
+			void JoinAll()
+			{
+				std::lock_guard<std::mutex> lock( _mutex );
+
+				if ( _threads.empty() )
+					return;
+
+				for ( auto& item : _threads )
+				{
+					auto& th = item.second;
+					if ( th->joinable() )
+						th->join();
+				}
+
+				_threads.clear();
+			}
+
+		private:
+			std::map<std::thread::id, std::unique_ptr<std::thread>>	  _threads;
+
+			std::mutex _mutex;
+		};
+	}   // end thread
 }   // end namespace suho

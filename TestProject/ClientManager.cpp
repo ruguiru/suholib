@@ -7,10 +7,12 @@ using namespace suho::log;
 
 void ClientManager::OnInsert(long key)
 {
+	UNREFERENCED(key)
 }
 
 void ClientManager::OnRemove(long key)
 {
+	UNREFERENCED( key )
 }
 
 void ClientManager::BroadCast(MyPacket& packet)

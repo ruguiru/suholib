@@ -4,45 +4,45 @@ using namespace suho::file;
 
 FileWriter::FileWriter()
 {
-    
+
 }
 
-FileWriter::FileWriter(const std::string & filename)
+FileWriter::FileWriter( const std::string& filename )
 {
-    Open(filename);
+	Open( filename );
 }
 
-FileWriter::FileWriter(const std::string & filename, const std::string & path)
+FileWriter::FileWriter( const std::string& filename, const std::string& path )
 {
-    Open(filename, path);
+	Open( filename, path );
 }
 
-FileWriter::FileWriter(const std::string & filename, const std::string & path, unsigned int openmode)
+FileWriter::FileWriter( const std::string& filename, const std::string& path, unsigned int openmode )
 {
-    Open(filename, path, openmode);
+	Open( filename, path, openmode );
 }
 
 FileWriter::~FileWriter()
 {
-    Close();
+	Close();
 }
 
-bool FileWriter::Open(const std::string & filename, const std::string & path, unsigned int openmode)
+bool FileWriter::Open( const std::string& filename, const std::string& path, unsigned int openmode )
 {
-    if (_outstream.is_open())
-        _outstream.close();
+	if ( _outstream.is_open() )
+		_outstream.close();
 
-    std::string fullpath(path);
-    fullpath += "\\";
-    fullpath += filename;
+	std::string fullpath( path );
+	fullpath += "\\";
+	fullpath += filename;
 
-    _outstream.open(fullpath, openmode);
+	_outstream.open( fullpath, openmode );
 
-    return _outstream.is_open();
+	return _outstream.is_open();
 }
 
 void FileWriter::Close()
 {
-    if (_outstream.is_open())
-        _outstream.close();
+	if ( _outstream.is_open() )
+		_outstream.close();
 }

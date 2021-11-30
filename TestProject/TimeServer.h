@@ -20,5 +20,4 @@ public:
 	int SendPacket(MyPacket& packet);
 
 private:
-	long							_key;
 };

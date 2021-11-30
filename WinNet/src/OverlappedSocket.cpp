@@ -19,7 +19,7 @@ void OverlappedSocket::AsyncAccept(SOCKET listen_sock, char * buf, int bufsize, 
     {
         if (GetLastError() != WSA_IO_PENDING)
         {
-            IocpLog(level::INFO, "Error AcceptEx()");
+            IocpLog(level::LogLevel::INFO, "Error AcceptEx()");
         }
     }
 }
@@ -123,7 +123,7 @@ bool OverlappedSocket::Reuse()
 		int errorcode = WSAGetLastError();
 		if (errorcode != ERROR_IO_PENDING)
 		{
-			IocpLog(level::ERR, "TransmitFile() Not Pending Error code:%d", errorcode);
+			IocpLog(level::LogLevel::ERR, "TransmitFile() Not Pending Error code:%d", errorcode);
 			return false;
 		}
 	}
@@ -137,7 +137,7 @@ bool OverlappedSocket::SetUpdateAcceptContext(SOCKET listen_socket)
         reinterpret_cast<const char*>(&listen_socket), sizeof(listen_socket));
 	if (result == SOCKET_ERROR)
 	{
-		IocpLog(level::FATAL, "SetOpt SO_UPDATE_ACCEPT_CONTEXT");
+		IocpLog(level::LogLevel::FATAL, "SetOpt SO_UPDATE_ACCEPT_CONTEXT");
 		return false;
 	}
 

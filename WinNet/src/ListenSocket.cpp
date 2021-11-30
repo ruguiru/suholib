@@ -29,5 +29,5 @@ void ListenSocket::SetConditionalAccept(bool onoff)
 	int value = onoff ? 1 : 0;
 	int result = setsockopt(_socket, SOL_SOCKET, SO_CONDITIONAL_ACCEPT, reinterpret_cast<const char*>(&value), sizeof(value));
 	if (result == SOCKET_ERROR)
-		IocpLog(level::FATAL, "SetOpt SO_CONDITIONAL_ACCEPT");
+		IocpLog(level::LogLevel::FATAL, "SetOpt SO_CONDITIONAL_ACCEPT");
 }

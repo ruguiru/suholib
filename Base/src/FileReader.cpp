@@ -6,104 +6,104 @@ FileReader::FileReader()
 {
 }
 
-FileReader::FileReader(const std::string & filename)
+FileReader::FileReader( const std::string& filename )
 {
-    Open(filename);
+	Open( filename );
 }
 
-FileReader::FileReader(const std::string & filename, const std::string & path)
+FileReader::FileReader( const std::string& filename, const std::string& path )
 {
-    Open(filename, path);
+	Open( filename, path );
 }
 
-FileReader::FileReader(const std::string & filename, const std::string & path, unsigned int openmode)
+FileReader::FileReader( const std::string& filename, const std::string& path, unsigned int openmode )
 {
-    Open(filename, path, openmode);
+	Open( filename, path, openmode );
 }
 
 FileReader::~FileReader()
 {
-    Close();
+	Close();
 }
 
-bool FileReader::Open(const std::string & filename, const std::string & path, unsigned int openmode)
+bool FileReader::Open( const std::string& filename, const std::string& path, unsigned int openmode )
 {
-    if (_instream.is_open())
-        _instream.close();
+	if ( _instream.is_open() )
+		_instream.close();
 
-    std::string fullpath(path);
-    fullpath += filename;
+	std::string fullpath( path );
+	fullpath += filename;
 
-    _instream.open(fullpath, openmode);
+	_instream.open( fullpath, openmode );
 
-    return _instream.is_open();
+	return _instream.is_open();
 }
 
 void FileReader::Close()
 {
-    if (_instream.is_open())
-        _instream.close();
+	if ( _instream.is_open() )
+		_instream.close();
 }
 
 int FileReader::GetFileSize()
 {
-    if (!_instream.is_open())
-        return -1;
+	if ( !_instream.is_open() )
+		return -1;
 
-    _instream.seekg(0, std::ios_base::beg);
-    std::ifstream::pos_type begin_pos = _instream.tellg();
-    _instream.seekg(0, std::ios_base::end);
+	_instream.seekg( 0, std::ios_base::beg );
+	std::ifstream::pos_type begin_pos = _instream.tellg();
+	_instream.seekg( 0, std::ios_base::end );
 
-    int filesize = static_cast<int>(_instream.tellg() - begin_pos);
-    ResetFilePointer();
-    return filesize;
+	int filesize = static_cast<int>( _instream.tellg() - begin_pos );
+	ResetFilePointer();
+	return filesize;
 }
 
 void FileReader::ResetFilePointer()
 {
-    if (!_instream.is_open())
-        return;
+	if ( !_instream.is_open() )
+		return;
 
-    _instream.seekg(0, std::ios::beg);
+	_instream.seekg( 0, std::ios::beg );
 }
 
-bool FileReader::Read(char * buffer, int buffersize)
+bool FileReader::Read( char* buffer, int buffersize )
 {
-    if (!_instream.is_open())
-        return false;
+	if ( !_instream.is_open() )
+		return false;
 
-    if (buffersize < GetFileSize())
-        return false;
+	if ( buffersize < GetFileSize() )
+		return false;
 
-    ResetFilePointer();
+	ResetFilePointer();
 
-    _instream.read(buffer, buffersize);
+	_instream.read( buffer, buffersize );
 
-    return true;
+	return true;
 }
 
-bool FileReader::ReadLine(char* buffer, int buffersize)
+bool FileReader::ReadLine( char* buffer, int buffersize )
 {
-    if (!_instream.is_open())
-        return false;
+	if ( !_instream.is_open() )
+		return false;
 
-    if (_instream.eof())
-        return false;
+	if ( _instream.eof() )
+		return false;
 
-    _instream.getline(buffer, buffersize);
+	_instream.getline( buffer, buffersize );
 
-    return true;
+	return true;
 }
 
-bool FileReader::ReadChar(char & ch)
+bool FileReader::ReadChar( char& ch )
 {
-    if (!_instream.is_open())
-        return false;
+	if ( !_instream.is_open() )
+		return false;
 
-    if (_instream.eof())
-        return false;
+	if ( _instream.eof() )
+		return false;
 
-    ch = static_cast<char>(_instream.get());
+	ch = static_cast<char>( _instream.get() );
 
-    return true;
+	return true;
 }

@@ -20,10 +20,8 @@ public:
 	virtual DWORD HeaderParsing(void* packet, DWORD recvbytes) override;
 	virtual void PacketProcessing(const void* packet, DWORD packetsize) override;
 
-    int SendPacket(MyPacket& packet);
-
+	int SendPacket(MyPacket& packet);
 
 private:
-	long							_key;
 };
 

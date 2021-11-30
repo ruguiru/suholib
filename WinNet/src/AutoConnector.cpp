@@ -23,7 +23,7 @@ void AutoConnector::Run(void * param)
 {
 	UNREFERENCED(param)
 
-    IocpLog(level::INFO, "Start AutoConnect");
+    IocpLog(level::LogLevel::INFO, "Start AutoConnect");
 
 	while (_is_started)
 	{
@@ -48,7 +48,7 @@ bool AutoConnector::ConnectUnit::CheckConnection()
 	{
 		if (!_netunit->IsConnected())
 		{
-			IocpLog(level::INFO, "[%d] Active But NotConnect!", _netunit->GetIndex());
+			IocpLog(level::LogLevel::INFO, "[%d] Active But NotConnect!", _netunit->GetIndex());
 			_netunit->DisconnectRequest();
 		}
 

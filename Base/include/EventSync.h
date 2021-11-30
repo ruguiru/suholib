@@ -3,24 +3,25 @@
 #include <condition_variable>
 #include <mutex>
 
-namespace suho {
-namespace thread
+namespace suho
 {
-	class EventSync
+	namespace thread
 	{
-	public:
-		EventSync(bool init_signal = false) : _signal(init_signal) {}
-		~EventSync() {}
+		class EventSync
+		{
+		public:
+			EventSync( bool init_signal = false ) : _signal( init_signal ) {}
+			~EventSync() {}
 
-		void Wait();
-		void Set();
-		void Reset();
+			void Wait();
+			void Set();
+			void Reset();
 
-	private:
-		std::condition_variable			_condition;
-		std::mutex						_mutex;
-		bool							_signal = false;
-	};
+		private:
+			std::condition_variable			_condition;
+			std::mutex						_mutex;
+			bool							_signal = false;
+		};
 
-}
+	}
 }

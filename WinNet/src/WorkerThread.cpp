@@ -32,7 +32,7 @@ void WorkerThread::Run(void * param)
 			if (overlapped != 0)
 			{
 				OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);
-				if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
+				if (over_ex->operation == OperatonType::OP_SEND || over_ex->operation == OperatonType::OP_DISCONNECT)
 				{
 					OverlappedPool::GetInstance()->ReturnObj(over_ex);
 				}
@@ -56,13 +56,13 @@ void WorkerThread::Run(void * param)
 			continue;
 
 		OverlappedEx* over_ex = static_cast<OverlappedEx*>(overlapped);		
-        if (over_ex->operation == OP_ACCEPT)
+        if (over_ex->operation == OperatonType::OP_ACCEPT)
         {
             NetUnit* new_unit = reinterpret_cast<NetUnit*>(over_ex->owner);
             if (new_unit)
                 new_unit->Accepted(transferred_bytes);
         }
-		else if (over_ex->operation == OP_CONNECT)
+		else if (over_ex->operation == OperatonType::OP_CONNECT)
 		{
 			NetUnit* new_unit = reinterpret_cast<NetUnit*>(over_ex->owner);
 			if (new_unit)
@@ -71,7 +71,7 @@ void WorkerThread::Run(void * param)
 		else
 		{
 			OperatonType optype = over_ex->operation;
-			if (over_ex->operation == OP_SEND || over_ex->operation == OP_DISCONNECT)
+			if (over_ex->operation == OperatonType::OP_SEND || over_ex->operation == OperatonType::OP_DISCONNECT)
 				OverlappedPool::GetInstance()->ReturnObj(over_ex);
 
 			if (completion_key != 0)
@@ -79,15 +79,15 @@ void WorkerThread::Run(void * param)
 				NetUnit* unit = reinterpret_cast<NetUnit*>(completion_key);
 				if (unit)
 				{
-					if (optype == OP_RECIEVE && transferred_bytes != 0)
+					if (optype == OperatonType::OP_RECIEVE && transferred_bytes != 0)
 					{
 						unit->Recieved(transferred_bytes);
 					}
-					else if (optype == OP_SEND && transferred_bytes != 0)
+					else if (optype == OperatonType::OP_SEND && transferred_bytes != 0)
 					{
 						unit->Sent(transferred_bytes);
 					}
-					else if (optype == OP_DISCONNECT)
+					else if (optype == OperatonType::OP_DISCONNECT)
 					{
 						unit->Disconnect();
 					}

@@ -6,28 +6,29 @@
 #include "TimePoint.h"
 #include "TimeSpan.h"
 
-namespace suho {
-namespace time
+namespace suho
 {
-    class StopWatch
-    {
-    public:
-        StopWatch();
-        ~StopWatch();
-        
-        // 시작한 시간 리턴 (현재시간)
-        const TimePoint& Start();
-        // 경과시간 리턴
-        TimeSpan Stop();
+	namespace time
+	{
+		class StopWatch
+		{
+		public:
+			StopWatch();
+			~StopWatch();
 
-        static TimePoint Now();
+			// 시작한 시간 리턴 (현재시간)
+			const TimePoint& Start();
+			// 경과시간 리턴
+			TimeSpan Stop();
 
-        static TimeSpan Elapse(const std::chrono::system_clock::time_point& passed_time_point);
-        static time_t Elapse(const time_t& passed_time);
+			static TimePoint Now();
 
-    private:
-        TimePoint                   _timestamp;
-    };
+			static TimeSpan Elapse( const std::chrono::system_clock::time_point& passed_time_point );
+			static time_t Elapse( const time_t& passed_time );
 
-}   // end namespace time
+		private:
+			TimePoint                   _timestamp;
+		};
+
+	}   // end namespace time
 }   // end namespace suho

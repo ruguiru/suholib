@@ -14,11 +14,13 @@ public:
 private:
 	void OnInsert(long key) override
 	{
+		UNREFERENCED(key)
 		printf("On Insert TimeServer\n");	// LOG
 	}
 
 	void OnRemove(long key) override
 	{
+		UNREFERENCED(key)
 		printf("On Remove TimeServer\n");	// LOG
 	}
 

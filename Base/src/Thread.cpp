@@ -10,37 +10,37 @@ BaseThread::BaseThread()
 
 BaseThread::~BaseThread()
 {
-    Terminate();
+	Terminate();
 }
 
-void BaseThread::Start(void* param)
+void BaseThread::Start( void* param )
 {
-    if (_is_started)
-    {
-        return;
-    }
+	if ( _is_started )
+	{
+		return;
+	}
 
 	_is_started = true;
-	_thread_id = ThreadManager::GetInstance()->Create(Invoker, this, param);
-    //_thread_id = ThreadManager::GetInstance()->Create(Run, param);
+	_thread_id = ThreadManager::GetInstance()->Create( Invoker, this, param );
+	//_thread_id = ThreadManager::GetInstance()->Create(Run, param);
 }
 
 void BaseThread::Terminate()
 {
-    _is_started = false;
+	_is_started = false;
 }
 
 void BaseThread::Join()
 {
-	ThreadManager::GetInstance()->Join(_thread_id);
+	ThreadManager::GetInstance()->Join( _thread_id );
 }
 
-void BaseThread::Invoker(void * thisptr, void * param)
+void BaseThread::Invoker( void* thisptr, void* param )
 {
-	BaseThread* th = static_cast<BaseThread*>(thisptr);
-    if (th)
-    {
-        th->Run(param);
-    }
+	BaseThread* th = static_cast<BaseThread*>( thisptr );
+	if ( th )
+	{
+		th->Run( param );
+	}
 }
 

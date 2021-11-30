@@ -16,7 +16,7 @@ namespace suho {
 namespace winnet {
 namespace iocp
 {
-    enum OperatonType
+    enum class OperatonType : int
     {
         OP_ACCEPT = 0,
 		OP_CONNECT,
@@ -25,8 +25,9 @@ namespace iocp
 		OP_DISCONNECT,
     };
 
-	enum Direction
+	enum class Direction : int
 	{
+		DIR_NONE,
 		DIR_ACCEPT_FROM,
 		DIR_CONNECT_TO,
 	};
@@ -44,7 +45,7 @@ namespace iocp
 	class NetUnit : public suho::idioms::NonCopyable
 	{
 	public:
-		NetUnit() {}
+		NetUnit() : _direction( Direction::DIR_NONE ) {}
 		explicit NetUnit(int index);
 		virtual ~NetUnit();
         

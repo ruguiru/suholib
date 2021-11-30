@@ -13,7 +13,7 @@ namespace datetime
             MAXMONTH = 12,
 
             MINDAY = 1,
-            MAXDAY = 31,            
+            MAXDAY = 31,
         };
 
         enum DayofWeek {
