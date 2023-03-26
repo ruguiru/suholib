@@ -95,12 +95,12 @@ void main()
 	printf("microsec:%lld\n", ts.ToMicroSeconds());
 	printf("nanosec:%lld\n", ts.ToNanoSeconds());
 
-	Timer::GetInstance()->RegisterFlatTimer(foo, Timer::EVERY_5_SECOND);
+	Timer::GetInstance()->RegisterFlatTimer(foo, Timer::FlatTime::EVERY_5_SECOND);
 	Timer::GetInstance()->Start();
 	Timer::GetInstance()->Join();
 
 	Timer t;
-	t.RegisterFlatTimer(foo, Timer::EVERY_1_MINUTE);
+	t.RegisterFlatTimer(foo, Timer::FlatTime::EVERY_1_MINUTE);
 	t.RegisterInstantTimer(foo2, 7);
 	t.RegisterNormalTimer(foo3, 5);
 	t.Start();

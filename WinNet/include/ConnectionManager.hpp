@@ -45,7 +45,7 @@ namespace iocp
 			_auto_connector.Destroy();
 		}
 
-		int GetSize() const { return _netunit_storage.size(); }
+		int GetSize() const { return static_cast<int>(_netunit_storage.size()); }
 
 	private:
 		//typedef std::vector<jss::atomic_shared_ptr<NetUnit>>			Storage;
@@ -60,7 +60,7 @@ namespace iocp
 	inline void ConnectionManager::InitAcceptConnections(
 		int size, const jss::atomic_shared_ptr<ListenSocket>& listen_sock)
 	{
-		int index = _netunit_storage.size();
+		int index = static_cast<int>(_netunit_storage.size());
 		while (size--)
 		{
 			jss::atomic_shared_ptr<NetUnit> netunit = std::make_shared<T>(index++);
@@ -76,7 +76,7 @@ namespace iocp
 	inline void ConnectionManager::InitConnectConnection(
 		int interval_msec, int id, const std::string& address, short port)
 	{
-		int index = _netunit_storage.size();
+		int index = static_cast<int>(_netunit_storage.size());
 		jss::atomic_shared_ptr<NetUnit> netunit = std::make_shared<T>(index++);
 		netunit->Init( Direction::DIR_CONNECT_TO);
 		netunit->SetConnectID(id);

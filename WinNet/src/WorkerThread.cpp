@@ -21,7 +21,7 @@ void WorkerThread::Run(void * param)
     while (_is_started)
     {
         DWORD transferred_bytes = 0;
-        DWORD completion_key = 0;
+        ULONG_PTR completion_key = 0;
         LPOVERLAPPED overlapped = nullptr;
 
         BOOL result = GetQueuedCompletionStatus(iocp, &transferred_bytes, &completion_key, &overlapped, INFINITE);

@@ -1,6 +1,6 @@
 #include "Log.h"
 
-#ifdef  _WIN32
+#ifdef WIN_PLATFORM
 #include <Windows.h>
 #include <shlobj.h>
 #endif
@@ -42,7 +42,7 @@ Logger::~Logger()
 
 void Logger::Create( const std::string& division, const std::string& path )
 {
-#ifdef _WIN32
+#ifdef WIN_PLATFORM
 #ifdef  UNICODE
 	std::wstring wfullpath;
 	wfullpath.assign( path.begin(), path.end() );
@@ -61,7 +61,7 @@ void Logger::Create( const std::string& division, const std::string& path )
 
 void Logger::CreateFolder( const std::string& date )
 {
-#ifdef _WIN32
+#ifdef WIN_PLATFORM
 #ifdef  UNICODE
 	std::wstring wfullpath;
 	wfullpath.assign( _path.begin(), _path.end() );

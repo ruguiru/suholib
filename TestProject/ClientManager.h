@@ -14,7 +14,7 @@ public:
 	void BroadCast(MyPacket& packet);
 
 	void Destroy() { _active_connections.clear(); }
-	int GetCount() const { return _active_connections.size(); }
+	int GetCount() const { return static_cast<int>(_active_connections.size()); }
 
 private:
 	void OnInsert(long key) override;

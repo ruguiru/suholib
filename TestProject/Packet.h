@@ -90,14 +90,14 @@ inline AbstractPacket & AbstractPacket::operator>>(T & data)
 // 오버로딩이라 같은 위치에 있어야 인식
 inline AbstractPacket & AbstractPacket::operator<<(const std::string & str)
 {
-	Write(str.c_str(), str.size() + 1);
+	Write(str.c_str(), static_cast<int>(str.size()) + 1);
 
 	return *this;
 }
 
 inline AbstractPacket & AbstractPacket::operator>>(std::string & str)
 {
-	int size = strlen(_stream_buffer.GetReadPos()) + 1;
+	int size = static_cast<int>(strlen(_stream_buffer.GetReadPos()) + 1);
 
 	//Read(const_cast<char*>(str.c_str()), size);
 	str = _stream_buffer.GetReadPos();
@@ -108,7 +108,7 @@ inline AbstractPacket & AbstractPacket::operator>>(std::string & str)
 
 inline AbstractPacket & AbstractPacket::operator<<(const char * sz)
 {
-	int size = strlen(sz) + 1;
+	int size = static_cast<int>(strlen(sz)) + 1;
 
 	Write(sz, size);
 
@@ -117,7 +117,7 @@ inline AbstractPacket & AbstractPacket::operator<<(const char * sz)
 
 inline AbstractPacket & AbstractPacket::operator>>(char * sz)
 {
-	int size = strlen(_stream_buffer.GetReadPos()) + 1;
+	int size = static_cast<int>(strlen(_stream_buffer.GetReadPos())) + 1   ;
 
 	Read(sz, size);
 

@@ -94,7 +94,7 @@ namespace iocp
 
 		int interval_msec = connectinfo["RetryIntervalmsec"];
 		json dest_array = connectinfo["Destinations"];
-		int arrcnt = dest_array.size();
+		int arrcnt = static_cast<int>(dest_array.size());
 		for (int i = 0; i < arrcnt; i++)
 		{
 			json dest = dest_array[i];

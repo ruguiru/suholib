@@ -10,6 +10,6 @@ void main()
 
 	for (int i = 0; i < 100; i++)
 	{
-		std::cout << suho::util::random::GetUniformInt(1, 10000) << std::endl;
+		std::cout << suho::util::random::GetUniformInt(1, 2) << std::endl;
 	}
 }

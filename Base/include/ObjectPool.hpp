@@ -148,7 +148,7 @@ namespace suho
 				_pool.push( startptr + i );
 			}
 
-			_expandsize = _pool.size() * 2;
+			_expandsize = static_cast<int>(_pool.size() * 2);
 		}
 
 		template<typename T, bool INDEXING>

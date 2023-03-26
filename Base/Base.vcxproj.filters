@@ -162,10 +162,10 @@
     <ClInclude Include="include\LogHelper.h">
       <Filter>Log</Filter>
     </ClInclude>
-    <ClInclude Include="ArrayLength.h">
+    <ClInclude Include="include\NonCopyable.h">
       <Filter>Idioms</Filter>
     </ClInclude>
-    <ClInclude Include="include\NonCopyable.h">
+    <ClInclude Include="include\ArrayLength.h">
       <Filter>Idioms</Filter>
     </ClInclude>
   </ItemGroup>

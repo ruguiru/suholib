@@ -9,7 +9,6 @@ int main()
 {
 	MyPacket pack(1);
 	pack << 2047 << (char)1 << std::string("abcd") << "efg";
-	pack.ShowMemory();
 
 	int a;
 	char b;

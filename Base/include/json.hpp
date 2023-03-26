@@ -9931,8 +9931,8 @@ class basic_json
         result["version"]["minor"] = NLOHMANN_JSON_VERSION_MINOR;
         result["version"]["patch"] = NLOHMANN_JSON_VERSION_PATCH;
 
-#ifdef _WIN32
-        result["platform"] = "win32";
+#ifdef WIN_PLATFORM
+        result["platform"] = "win";
 #elif defined __linux__
         result["platform"] = "linux";
 #elif defined __APPLE__
